@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:ferraria/screens/login_screen.dart';
 
 class PerfilScreen extends StatefulWidget {
   const PerfilScreen({super.key});
@@ -9,13 +13,71 @@ class PerfilScreen extends StatefulWidget {
 }
 
 class _PerfilScreenState extends State<PerfilScreen> {
-  // Cambia a true para probar cómo se ve la vista de vendedor
-  bool isVendedor = false; 
+  // Datos del usuario actual de Firebase
+  final User? currentUser = FirebaseAuth.instance.currentUser;
+
+  // Variables dinámicas
+  String nombreUsuario = 'Cargando...';
+  String correoUsuario = '';
+  String rolUsuario = 'cliente'; // Por defecto
+  bool _isLoadingData = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarDatosUsuario();
+  }
+
+  Future<void> _cargarDatosUsuario() async {
+    if (currentUser == null) return;
+
+    try {
+      correoUsuario = currentUser!.email ?? '';
+
+      final doc = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(currentUser!.uid)
+          .get();
+
+      if (doc.exists && mounted) {
+        setState(() {
+          nombreUsuario = doc.data()?['nombre'] ?? currentUser!.displayName ?? 'Usuario';
+          rolUsuario = (doc.data()?['rol'] ?? 'cliente').toString().toLowerCase();
+          _isLoadingData = false;
+        });
+      } else if (mounted) {
+        setState(() {
+          nombreUsuario = currentUser!.displayName ?? 'Usuario';
+          _isLoadingData = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          nombreUsuario = currentUser!.displayName ?? 'Usuario';
+          _isLoadingData = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _cerrarSesion() async {
+    await FirebaseAuth.instance.signOut();
+    if (!mounted) return;
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final bool esVendedor = rolUsuario == 'vendedor';
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA), // Fondo gris muy claro
+      backgroundColor: const Color(0xFFF8F9FA), // Fondo gris suave
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -29,142 +91,112 @@ class _PerfilScreenState extends State<PerfilScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // =========================
-            // 1. HEADER DE USUARIO
-            // =========================
-            _buildProfileHeader(),
+      body: _isLoadingData
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xFF73C2FB)),
+            )
+          : SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-            const SizedBox(height: 25),
+                  _buildProfileHeader(esVendedor),
 
-            // Switch de prueba (para alternar entre Cliente y Vendedor)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Modo Vendedor',
-                  style: GoogleFonts.nunito(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[700],
-                  ),
-                ),
-                Switch(
-                  value: isVendedor,
-                  activeThumbColor: const Color(0xFF73C2FB),
-                  onChanged: (val) {
-                    setState(() {
-                      isVendedor = val;
-                    });
-                  },
-                ),
-              ],
+                  const SizedBox(height: 25),
+
+
+                  if (esVendedor) ...[
+                    _buildSectionTitle('Gestión de Ferretería'),
+                    _buildGroupContainer([
+                      _buildOptionTile(
+                        icon: Icons.inventory_2_outlined,
+                        title: 'Mis Productos e Inventario',
+                        onTap: () {},
+                      ),
+                      _buildOptionTile(
+                        icon: Icons.local_shipping_outlined,
+                        title: 'Pedidos por Entregar',
+                        onTap: () {},
+                      ),
+                      _buildOptionTile(
+                        icon: Icons.bar_chart_outlined,
+                        title: 'Ventas y Reportes',
+                        onTap: () {},
+                      ),
+                    ]),
+                  ] else ...[
+                    _buildSectionTitle('Mis Compras'),
+                    _buildGroupContainer([
+                      _buildOptionTile(
+                        icon: Icons.shopping_bag_outlined,
+                        title: 'Historial de Pedidos',
+                        onTap: () {},
+                      ),
+                      _buildOptionTile(
+                        icon: Icons.location_on_outlined,
+                        title: 'Mis Direcciones de Envío',
+                        onTap: () {},
+                      ),
+                      _buildOptionTile(
+                        icon: Icons.receipt_long_outlined,
+                        title: 'Mis Facturas',
+                        onTap: () {},
+                      ),
+                    ]),
+                  ],
+
+                  const SizedBox(height: 20),
+
+
+                  _buildSectionTitle('Cuenta y Preferencias'),
+                  _buildGroupContainer([
+                    _buildOptionTile(
+                      icon: Icons.person_outline,
+                      title: 'Editar Mi Perfil',
+                      onTap: () {},
+                    ),
+                    _buildOptionTile(
+                      icon: Icons.notifications_none_outlined,
+                      title: 'Notificaciones',
+                      onTap: () {},
+                    ),
+                    _buildOptionTile(
+                      icon: Icons.lock_outline,
+                      title: 'Seguridad y Contraseña',
+                      onTap: () {},
+                    ),
+                  ]),
+
+                  const SizedBox(height: 20),
+
+  
+
+                  _buildSectionTitle('Soporte'),
+                  _buildGroupContainer([
+                    _buildOptionTile(
+                      icon: Icons.help_outline,
+                      title: 'Centro de Ayuda',
+                      onTap: () {},
+                    ),
+                    _buildOptionTile(
+                      icon: Icons.logout,
+                      title: 'Cerrar Sesión',
+                      iconColor: Colors.redAccent,
+                      textColor: Colors.redAccent,
+                      showChevron: false,
+                      onTap: _cerrarSesion,
+                    ),
+                  ]),
+
+                  const SizedBox(height: 90), // Espacio extra para que el Navbar no tape las opciones
+                ],
+              ),
             ),
-
-            const SizedBox(height: 15),
-
-            // =========================
-            // 2. SECCIONES SEGÚN EL ROL
-            // =========================
-            if (isVendedor) ...[
-              _buildSectionTitle('Gestión de Ferretería'),
-              _buildGroupContainer([
-                _buildOptionTile(
-                  icon: Icons.inventory_2_outlined,
-                  title: 'Mis Productos e Inventario',
-                  onTap: () {},
-                ),
-                _buildOptionTile(
-                  icon: Icons.local_shipping_outlined,
-                  title: 'Pedidos por Entregar',
-                  onTap: () {},
-                ),
-                _buildOptionTile(
-                  icon: Icons.bar_chart_outlined,
-                  title: 'Ventas y Reportes',
-                  onTap: () {},
-                ),
-              ]),
-            ] else ...[
-              _buildSectionTitle('Mis Compras'),
-              _buildGroupContainer([
-                _buildOptionTile(
-                  icon: Icons.shopping_bag_outlined,
-                  title: 'Historial de Pedidos',
-                  onTap: () {},
-                ),
-                _buildOptionTile(
-                  icon: Icons.location_on_outlined,
-                  title: 'Mis Direcciones de Envío',
-                  onTap: () {},
-                ),
-                _buildOptionTile(
-                  icon: Icons.receipt_long_outlined,
-                  title: 'Mis Facturas',
-                  onTap: () {},
-                ),
-              ]),
-            ],
-
-            const SizedBox(height: 20),
-
-            // =========================
-            // 3. CONFIGURACIÓN GENERAL
-            // =========================
-            _buildSectionTitle('Cuenta y Preferencias'),
-            _buildGroupContainer([
-              _buildOptionTile(
-                icon: Icons.person_outline,
-                title: 'Editar Mi Perfil',
-                onTap: () {},
-              ),
-              _buildOptionTile(
-                icon: Icons.notifications_none_outlined,
-                title: 'Notificaciones',
-                onTap: () {},
-              ),
-              _buildOptionTile(
-                icon: Icons.lock_outline,
-                title: 'Seguridad y Contraseña',
-                onTap: () {},
-              ),
-            ]),
-
-            const SizedBox(height: 20),
-
-            // =========================
-            // 4. SOPORTE Y CERRAR SESIÓN
-            // =========================
-            _buildSectionTitle('Soporte'),
-            _buildGroupContainer([
-              _buildOptionTile(
-                icon: Icons.help_outline,
-                title: 'Centro de Ayuda',
-                onTap: () {},
-              ),
-              _buildOptionTile(
-                icon: Icons.logout,
-                title: 'Cerrar Sesión',
-                iconColor: Colors.redAccent,
-                textColor: Colors.redAccent,
-                showChevron: false,
-                onTap: () {},
-              ),
-            ]),
-
-            const SizedBox(height: 30),
-          ],
-        ),
-      ),
     );
   }
 
-  // WIDGET: Header con foto, nombre y correo
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(bool esVendedor) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -172,18 +204,31 @@ class _PerfilScreenState extends State<PerfilScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color.fromARGB(118, 0, 0, 0),
-            blurRadius: 5,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Row(
         children: [
-          const CircleAvatar(
+          // Avatar con foto del perfil de Google o Inicial
+          CircleAvatar(
             radius: 32,
-            backgroundImage: AssetImage('assets/images/martillo.png'), // Tu imagen o foto de usuario
-            backgroundColor: Color(0xFFF4B400),
+            backgroundColor: const Color(0xFF73C2FB),
+            backgroundImage: currentUser?.photoURL != null
+                ? NetworkImage(currentUser!.photoURL!)
+                : null,
+            child: currentUser?.photoURL == null
+                ? Text(
+                    nombreUsuario.isNotEmpty ? nombreUsuario[0].toUpperCase() : 'U',
+                    style: GoogleFonts.nunito(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  )
+                : null,
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -191,7 +236,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Dara Anaid',
+                  nombreUsuario,
                   style: GoogleFonts.nunito(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -200,10 +245,31 @@ class _PerfilScreenState extends State<PerfilScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'dara.anaid@gmail.com',
+                  correoUsuario,
                   style: GoogleFonts.nunito(
                     fontSize: 13,
                     color: Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(height: 6),
+                // Etiqueta visual indicando el Rol
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: esVendedor
+                        ? const Color(0xFFFFF3CD) // Fondo amarillo suave
+                        : const Color(0xFFE3F2FD), // Fondo azul suave
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    esVendedor ? 'Vendedor' : 'Cliente',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: esVendedor
+                          ? const Color(0xFF856404)
+                          : const Color(0xFF0D47A1),
+                    ),
                   ),
                 ),
               ],
@@ -214,7 +280,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
     );
   }
 
-  // WIDGET: Título de cada sección en gris
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, bottom: 8),
@@ -229,7 +294,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
     );
   }
 
-  // WIDGET: Contenedor agrupador blanco redondeado
   Widget _buildGroupContainer(List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
@@ -237,8 +301,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: const Color.fromARGB(104, 0, 0, 0),
-            blurRadius: 5,
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
@@ -249,7 +313,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
     );
   }
 
-  // WIDGET: Cada fila u opción dentro del grupo
   Widget _buildOptionTile({
     required IconData icon,
     required String title,

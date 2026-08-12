@@ -1,3 +1,4 @@
+import 'package:ferraria/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -46,9 +47,9 @@ class NavBarCliente extends StatelessWidget {
           ),
         ),
         ListTile(
-          leading: Icon(Icons.dashboard),
+          leading: Icon(Icons.inventory_2),
           title: Text(
-            'Dashboard',
+            'Mis pedidos',
             style: GoogleFonts.nunito (
               textStyle: TextStyle(
               color: Colors.black,
@@ -62,23 +63,8 @@ class NavBarCliente extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => const CarritoScreen(),
-              ),
-            );
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.inventory_2),
-          title: Text(
-            'Mis pedidos',
-            style: GoogleFonts.nunito (
-              textStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-            ),
-            ),
-          ),
-          onTap: () {
-            Navigator.pop(context);
+                ),
+              );
           },
         ),
         ListTile(
@@ -189,6 +175,12 @@ class NavBarCliente extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+              Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
           },
         ),
         ],

@@ -1,13 +1,13 @@
-import 'package:ferraria/screens/favoritos_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-// Widgets modulares
+import 'package:ferraria/screens/favoritos_screen.dart';
+import 'package:ferraria/widgets/favoritos.dart'; 
 import 'package:ferraria/widgets/informacion_producto_card.dart';
 import 'package:ferraria/widgets/descripcion_card.dart';
 import 'package:ferraria/widgets/especificaciones_card.dart';
 
-class ProductoEspecificoScreen extends StatelessWidget {
+class ProductoEspecificoScreen extends StatefulWidget {
   final String nombre;
   final String precio;
   final String imagen;
@@ -30,13 +30,28 @@ class ProductoEspecificoScreen extends StatelessWidget {
   });
 
   @override
+  State<ProductoEspecificoScreen> createState() => _ProductoEspecificoScreenState();
+}
+
+class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
+
+  bool esFavorito = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    esFavorito = FavoritosService.esFavorito(widget.nombre);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final listaImagenes = (imagenes != null && imagenes!.isNotEmpty)
-        ? imagenes!
-        : [imagen];
+    final listaImagenes = (widget.imagenes != null && widget.imagenes!.isNotEmpty)
+        ? widget.imagenes!
+        : [widget.imagen];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB), 
+      backgroundColor: const Color(0xFFF9FAFB),
 
       appBar: AppBar(
         backgroundColor: const Color(0xFF73C2FB),
@@ -46,12 +61,12 @@ class ProductoEspecificoScreen extends StatelessWidget {
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(
-            Icons.chevron_left, 
-            size: 30
+            Icons.chevron_left,
+            size: 30,
           ),
         ),
         title: Text(
-          nombre,
+          widget.nombre,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.nunito(
@@ -60,15 +75,57 @@ class ProductoEspecificoScreen extends StatelessWidget {
           ),
         ),
         actions: [
+
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => FavoritosScreen(),
-              ),
+              setState(() {
+                esFavorito = !esFavorito;
+
+                if (esFavorito) {
+                  // Agregar al servicio global de favoritos
+                  FavoritosService.agregar({
+                    'nombre': widget.nombre,
+                    'precio': widget.precio,
+                    'imagen': widget.imagen,
+                  });
+                } else {
+                  // Remover del servicio global
+                  FavoritosService.eliminar(widget.nombre);
+                }
+              });
+
+              // Mostrar SnackBar al usuario
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    esFavorito
+                        ? 'Agregado a tus favoritos'
+                        : 'Removido de favoritos',
+                    style: GoogleFonts.nunito(
+                      fontSize: 12,
+                    ),
+                  ),
+                  duration: const Duration(seconds: 2),
+                  behavior: SnackBarBehavior.floating,
+                  backgroundColor: esFavorito ? Color(0xFF73C2FB) : const Color(0xFF73C2FB),
+                  action: SnackBarAction(
+                    label: 'Ver',
+                    textColor: Colors.white,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const FavoritosScreen()),
+                      );
+                    },
+                  ),
+                ),
               );
             },
-            icon: const Icon(Icons.favorite_border),
+            icon: Icon(
+              esFavorito ? Icons.favorite : Icons.favorite_border,
+              color: esFavorito ? Colors.white : Colors.white,
+            ),
           ),
         ],
         shape: const RoundedRectangleBorder(
@@ -82,29 +139,28 @@ class ProductoEspecificoScreen extends StatelessWidget {
           children: [
             ProductoInfoCard(
               imagenes: listaImagenes,
-              nombre: nombre,
-              precio: precio,
-              sku: sku ?? '04511214121451',
-              puntuacion: puntuacion ?? 4.5,
-              comentarios: comentarios ?? 15,
-              disponibles: disponibles ?? 10,
+              nombre: widget.nombre,
+              precio: widget.precio,
+              sku: widget.sku ?? '04511214121451',
+              puntuacion: widget.puntuacion ?? 4.5,
+              comentarios: widget.comentarios ?? 15,
+              disponibles: widget.disponibles ?? 10,
             ),
 
             const SizedBox(height: 16),
 
-       
             const DescripcionCard(
               descripcion:
-                  'Martillo profesional diseñado para trabajos de construcción y carpintería. Cuenta con un mango cómodo de hule ergonómico y una cabeza de acero de alta resistencia.',
+              'Diseñado para ofrecer un equilibrio perfecto entre potencia y control, permite clavar, ajustar y retirar clavos con facilidad gracias a su uña curva de alta resistencia. Fabricado con materiales duraderos y un diseño ergonómico, este martillo proporciona un agarre cómodo y seguro, reduciendo la fatiga durante jornadas de trabajo prolongadas. Ideal tanto para uso profesional como para proyectos de bricolaje (DIY).',
             ),
 
             const SizedBox(height: 16),
 
             const EspecificacionesCard(
-              marca: 'SURTEK',
+              marca: 'Wilson',
               modelo: '420X',
               especificaciones: [
-                'Peso: 20 oz',
+                'Peso: 16 oz',
                 'Material: Acero forjado',
                 'Mango: Hule antiderrapante',
                 'Garantía: 1 año con fabricante',
@@ -113,14 +169,16 @@ class ProductoEspecificoScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
+            // BOTÓN AGREGAR AL CARRITO
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        '$nombre agregado al carrito',
+                        '${widget.nombre} agregado al carrito',
                         style: GoogleFonts.nunito(),
                       ),
                       duration: const Duration(seconds: 2),

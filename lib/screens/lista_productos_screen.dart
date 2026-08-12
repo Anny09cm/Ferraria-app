@@ -35,15 +35,21 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
     super.dispose();
   }
 
-  List<Map<String, String>> obtenerProductos() {
-    List<Map<String, String>> todos = [];
+  List<Map<String, dynamic>> obtenerProductos() {
+    List<Map<String, dynamic>> todos = [];
 
     if (widget.tipo == "Martillos") {
       todos = [
         {
-          "nombre": "Martillo con agarre curvo",
+          "nombre": "Martillo con agarre curvo 16oz",
           "precio": "MXN 349",
-          "imagen": "assets/images/martillo.png",
+          "imagen": "assets/images/martilloagarrecurvo1.png",
+          "imagenes": [
+            "assets/images/martilloagarrecurvo1.png",
+            "assets/images/martilloagarrecurvo2.png",
+            "assets/images/martilloagarrecurvo3.png",
+            "assets/images/martilloagarrecurvo4.png",
+          ],
           "puntuacion": "4.8",
           "comentarios": "24",
         },
@@ -93,17 +99,28 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
       todos = [
         {
           "nombre": "Taladro eléctrico",
-          "precio": " MXN 850",
+          "precio": "MXN 850",
           "imagen": "assets/images/taladro.png",
           "puntuacion": "5.0",
           "comentarios": "45",
         },
       ];
+    } else if (widget.tipo == "Llaves") {
+      todos = [
+        {
+          "nombre": "Juego de Llaves Combinadas",
+          "precio": "MXN 480",
+          "imagen": "assets/images/juego.png",
+          "puntuacion": "4.5",
+          "comentarios": "12",
+        }
+      ];
     }
 
     if (_filtroBusqueda.isNotEmpty) {
       return todos
-          .where((p) => p["nombre"]!
+          .where((p) => p["nombre"]
+              .toString()
               .toLowerCase()
               .contains(_filtroBusqueda.toLowerCase()))
           .toList();
@@ -118,13 +135,11 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         backgroundColor: const Color(0xFF73C2FB),
         foregroundColor: Colors.white,
         elevation: 4,
         centerTitle: true,
-
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
@@ -134,7 +149,6 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
             size: 32,
           ),
         ),
-
         title: Text(
           widget.tipo,
           style: GoogleFonts.nunito(
@@ -142,35 +156,31 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
             fontSize: 22,
           ),
         ),
-
         actions: [
           IconButton(
             onPressed: () {
-              /* Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const FavoritosScreen(),
                 ),
-              ); */
+              );
             },
             icon: const Icon(
               Icons.favorite_border,
             ),
           ),
         ],
-
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(20),
           ),
         ),
       ),
-
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-
             Row(
               children: [
                 Expanded(
@@ -188,9 +198,7 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
                 const FiltroButton(),
               ],
             ),
-
             const SizedBox(height: 20),
-
             Expanded(
               child: productos.isEmpty
                   ? Center(
@@ -208,42 +216,46 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 15,
                         mainAxisSpacing: 15,
-                        mainAxisExtent: 200, 
+                        mainAxisExtent: 220, // Ajustado a 220 para que quepa bien ProductoCard
                       ),
-
                       itemCount: productos.length,
-
                       itemBuilder: (context, index) {
                         final producto = productos[index];
 
                         return GestureDetector(
                           onTap: () {
+                            // NAVEGACIÓN ENVIANDO LISTA DE IMÁGENES
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ProductoEspecificoScreen(
-                                  nombre: producto["nombre"]!,
-                                  precio: producto["precio"]!,
-                                  imagen: producto["imagen"]!,
+                                builder: (context) => ProductoEspecificoScreen(
+                                  nombre: producto["nombre"].toString(),
+                                  precio: producto["precio"].toString(),
+                                  imagen: producto["imagen"].toString(),
+                                  imagenes: (producto["imagenes"] as List<dynamic>?)
+                                      ?.cast<String>(), // 👈 Envía la lista de imágenes
+                                  puntuacion: double.tryParse(
+                                    producto["puntuacion"]?.toString() ?? '0.0',
+                                  ),
+                                  comentarios: int.tryParse(
+                                    producto["comentarios"]?.toString() ?? '0',
+                                  ),
                                 ),
                               ),
                             );
                           },
-
                           child: ProductoCard(
-                            imagen: producto["imagen"] ?? '',
-                            nombre: producto["nombre"] ?? '',
-                            precio: producto["precio"],
+                            imagen: producto["imagen"]?.toString() ?? '',
+                            nombre: producto["nombre"]?.toString() ?? '',
+                            precio: producto["precio"]?.toString(),
                             puntuacion: double.tryParse(
-                              producto["puntuacion"] ?? '0.0',
+                              producto["puntuacion"]?.toString() ?? '0.0',
                             ),
                             comentarios: int.tryParse(
-                                  producto["comentarios"] ?? '0',
+                                  producto["comentarios"]?.toString() ?? '0',
                                 ) ??
                                 0,
                             onAddToCart: () {
-                              // Notificación al presionar el botón del carrito
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(

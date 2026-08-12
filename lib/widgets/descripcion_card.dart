@@ -40,9 +40,11 @@ class DescripcionCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               descripcion,
+               textAlign: TextAlign.justify,
               style: GoogleFonts.nunito(
                 fontSize: 14,
                 color: const Color(0xFF6B7280),
+                
                 height: 1.5,
               ),
             ),

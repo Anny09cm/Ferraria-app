@@ -20,7 +20,6 @@ class HomeScreen extends StatelessWidget {
       'assets/images/urrea.png',
     ];
 
-    // 2. Lista de productos para "Volver a comprar"
     final List<Map<String, dynamic>> volverAComprarProductos = [
       {
         'nombre': 'Esmeriladora Angular 4-1/2"',
@@ -69,13 +68,12 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
 
             Text(
               '¡Ofertas del día!',
               style: GoogleFonts.nunito(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
             ),
 
@@ -191,7 +189,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: MediaQuery.of(context).padding.bottom + 40)
+            SizedBox(height: MediaQuery.of(context).padding.bottom + 30)
           ],
         ),
       ),

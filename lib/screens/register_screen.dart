@@ -15,9 +15,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  // =========================================================
-  // CONTROLADORES
-  // =========================================================
+
 
   final _nombreController = TextEditingController();
   final _telefonoController = TextEditingController();
@@ -25,17 +23,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  // =========================================================
-  // VARIABLES
-  // =========================================================
+
 
   String _rolSeleccionado = 'cliente';
 
   bool _isLoading = false;
 
-  // =========================================================
-  // LIBERAR CONTROLADORES
-  // =========================================================
+
 
   @override
   void dispose() {
@@ -48,9 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  // =========================================================
-  // REGISTRO CON CORREO Y CONTRASEÑA
-  // =========================================================
+
 
   Future<void> _registrarConEmail() async {
     final nombre = _nombreController.text.trim();
@@ -60,9 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final confirmPassword =
         _confirmPasswordController.text.trim();
 
-    // -------------------------
-    // VALIDACIONES
-    // -------------------------
+
 
     if (nombre.isEmpty ||
         email.isEmpty ||
@@ -152,9 +142,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-  // =========================================================
-  // REGISTRO / INICIO CON GOOGLE
-  // =========================================================
+
 
   Future<void> _registrarConGoogle() async {
   setState(() {
@@ -240,9 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 }
-  // =========================================================
-  // NAVEGAR A MAIN SCREEN
-  // =========================================================
+
 
   void _navegarAMainScreen() {
     Navigator.pushAndRemoveUntil(
@@ -254,9 +240,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // =========================================================
-  // SNACKBAR
-  // =========================================================
+
 
   void _mostrarSnackBar(String texto) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -270,9 +254,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // =========================================================
-  // BUILD
-  // =========================================================
 
   @override
   Widget build(BuildContext context) {
@@ -281,10 +262,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       body: Column(
         children: [
-
-          // =================================================
-          // LOGO
-          // =================================================
 
           Center(
             child: Image.asset(
@@ -297,10 +274,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       0.25,
             ),
           ),
-
-          // =================================================
-          // CONTENEDOR PRINCIPAL
-          // =================================================
 
           Expanded(
             child: Container(
@@ -329,10 +302,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         CrossAxisAlignment.start,
 
                     children: [
-
-                      // =====================================
-                      // TÍTULO
-                      // =====================================
 
                       SizedBox(
                         width: double.infinity,
@@ -397,9 +366,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       const SizedBox(height: 20),
 
-                      // =====================================
-                      // NOMBRE
-                      // =====================================
 
                       Text(
                         'Nombre completo',
@@ -420,10 +386,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
 
                       const SizedBox(height: 20),
-
-                      // =====================================
-                      // TELÉFONO
-                      // =====================================
 
                       Text(
                         'Teléfono',
@@ -448,10 +410,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       const SizedBox(height: 20),
 
-                      // =====================================
-                      // CORREO
-                      // =====================================
-
                       Text(
                         'Correo',
                         style:
@@ -475,10 +433,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       const SizedBox(height: 20),
 
-                      // =====================================
-                      // CONTRASEÑA
-                      // =====================================
-
                       Text(
                         'Crea una contraseña',
                         style:
@@ -501,10 +455,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       const SizedBox(height: 20),
 
-                      // =====================================
-                      // CONFIRMAR CONTRASEÑA
-                      // =====================================
-
                       Text(
                         'Confirma la contraseña',
                         style:
@@ -526,10 +476,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
 
                       const SizedBox(height: 20),
-
-                      // =====================================
-                      // BOTÓN CONTINUAR
-                      // =====================================
 
                       SizedBox(
                         width: double.infinity,
@@ -592,9 +538,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       const SizedBox(height: 20),
 
-                      // =====================================
-                      // DIVISOR
-                      // =====================================
 
                       Row(
                         children: [
@@ -637,10 +580,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
 
                       const SizedBox(height: 20),
-
-                      // =====================================
-                      // GOOGLE / APPLE
-                      // =====================================
 
                       Row(
                         mainAxisAlignment:
@@ -800,9 +739,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // =========================================================
-  // OPCIÓN CLIENTE / VENDEDOR
-  // =========================================================
 
   Widget _buildRolOption({
     required String label,

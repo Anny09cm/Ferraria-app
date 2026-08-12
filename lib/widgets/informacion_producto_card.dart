@@ -63,7 +63,7 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
           children: [
             // 1. IMAGEN / CARRUSEL
             SizedBox(
-              height: 120,
+              height: 200,
               width: double.infinity,
               child: widget.imagenes.isEmpty
                   ? const Icon(
@@ -96,7 +96,7 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
 
             const SizedBox(height: 12),
 
-            // 2. PUNTOS DEL CARRUSEL
+
             if (widget.imagenes.length > 1)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -109,7 +109,7 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
                     height: estaActivo ? 10 : 8,
                     decoration: BoxDecoration(
                       color: estaActivo
-                          ? const Color(0xFFFFC107) 
+                          ? const Color(0xFF73C2FB) 
                           : const Color(0xFFC4C4C4), 
                       shape: BoxShape.circle,
                     ),

@@ -81,9 +81,6 @@ class _MainScreenState extends State<MainScreen> {
 
     final bool esVendedor = _rol == 'vendedor';
 
-    // ============================
-    // PANTALLAS DEL VENDEDOR
-    // ============================
 
     final List<Widget> screens = esVendedor
         ? [
@@ -93,9 +90,6 @@ class _MainScreenState extends State<MainScreen> {
             const PerfilScreen(),
           ]
 
-        // ============================
-        // PANTALLAS DEL CLIENTE
-        // ============================
 
         : [
             const CatalogoScreen(),
@@ -105,9 +99,7 @@ class _MainScreenState extends State<MainScreen> {
             const PerfilScreen(),
           ];
 
-    // ============================
-    // ICONOS
-    // ============================
+
 
     final List<Widget> items = esVendedor
         ? const [

@@ -68,19 +68,20 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
         title: Text(
           'Catálogo',
           style: GoogleFonts.nunito(
-            textStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
+            textStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
       ),
 
       body: Padding(
-        padding: const EdgeInsetsGeometry.all(20),
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 90), // 👈 Padding inferior para no ser tapado por el navbar
         child: GridView.builder(
-          gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
+          physics: const BouncingScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 15,
             mainAxisSpacing: 15,
@@ -104,37 +105,34 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
                   listaDeProductos = [
                     {
                       "nombre": "Martillos",
-                      "imagen":
-                          "assets/images/martillo.png",
+                      "imagen": "assets/images/martillo.png",
                     },
                     {
                       "nombre": "Destornilladores",
-                      "imagen":
-                          "assets/images/destornillador.png",
+                      "imagen": "assets/images/destornillador.png",
                     },
                     {
                       "nombre": "Alicates",
-                      "imagen":
-                          "assets/images/alicate.png",
+                      "imagen": "assets/images/alicate.png",
                     },
                     {
                       "nombre": "Taladros",
-                      "imagen":
-                          "assets/images/taladro.png",
+                      "imagen": "assets/images/taladro.png",
+                    },
+                    {
+                      "nombre": "Llaves",
+                      "imagen": "assets/images/juego.png",
                     },
                   ];
-                } else if (categoriaNombre ==
-                    "Electricidad") {
+                } else if (categoriaNombre == "Electricidad") {
                   listaDeProductos = [
                     {
                       "nombre": "Cables",
-                      "imagen":
-                          "assets/images/cables.png",
+                      "imagen": "assets/images/cables.png",
                     },
                     {
                       "nombre": "Interruptores",
-                      "imagen":
-                          "assets/images/interruptor.png",
+                      "imagen": "assets/images/interruptor.png",
                     },
                   ];
                 }
@@ -142,8 +140,7 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        CategoriaScreen(
+                    builder: (context) => CategoriaScreen(
                       categoria: categoriaNombre,
                       productos: listaDeProductos,
                     ),
