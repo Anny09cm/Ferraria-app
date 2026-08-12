@@ -81,6 +81,14 @@ flutter:
   - assets/images/destornillador.png
   - assets/images/alicate.png
   - assets/images/taladro.png
+  - assets/images/esmeriladora.png
+  - assets/images/rotomartillo.png
+  - assets/images/juego.png
+  - assets/images/podadora.png
+  - assets/images/truper.png
+  - assets/images/dewalt.png
+  - assets/images/urrea.png
+  - assets/images/makita.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

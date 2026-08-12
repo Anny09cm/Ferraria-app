@@ -3,14 +3,13 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// Pantallas del Cliente
+
 import 'package:ferraria/screens/catalogo_screen.dart';
 import 'package:ferraria/screens/search_screen.dart';
 import 'package:ferraria/screens/home_screen.dart';
 import 'package:ferraria/screens/carrito_screen.dart';
 import 'package:ferraria/screens/perfil_screen.dart';
 
-// Pantallas del Vendedor
 import 'package:ferraria/screens/dashboard_vendedor_screen.dart';
 
 class MainScreen extends StatefulWidget {

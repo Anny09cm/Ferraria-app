@@ -7,7 +7,7 @@ class ProductoCard extends StatelessWidget {
   final String? precio;
   final double? puntuacion;
   final int comentarios;
-  final VoidCallback? onAddToCart; // Opcional
+  final VoidCallback? onAddToCart; 
 
   const ProductoCard({
     super.key,
