@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "734157305349",
+    "project_id": "ferraria-app",
+    "storage_bucket": "ferraria-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734157305349:android:4db024d800e21a4e6e0e6c",
+        "android_client_info": {
+          "package_name": "com.example.ferraria"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1RopMOyGNA1duDfOWImK8A4dftgk0kgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
