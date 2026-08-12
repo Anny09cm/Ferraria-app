@@ -12,7 +12,20 @@
           "package_name": "com.example.ferraria"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "734157305349-nipfukbmrmc9g4f0rol02farfamr89g7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ferraria",
+            "certificate_hash": "81130245e870cf32ccee39d7ace9dd092f020f98"
+          }
+        },
+        {
+          "client_id": "734157305349-rb74n42q0f7irs13hiivq20nvht28oe5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD1RopMOyGNA1duDfOWImK8A4dftgk0kgg"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "734157305349-rb74n42q0f7irs13hiivq20nvht28oe5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
