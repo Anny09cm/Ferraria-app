@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:ferraria/widgets/favoritos.dart';
+import 'package:ferraria/services/cart_favorites_service.dart';
 import 'package:ferraria/widgets/producto_card.dart';
 
 class FavoritosScreen extends StatefulWidget {
@@ -12,10 +13,36 @@ class FavoritosScreen extends StatefulWidget {
 }
 
 class _FavoritosScreenState extends State<FavoritosScreen> {
+  final Set<String> _procesando = {};
+
+  // =========================================================
+  // MENSAJE
+  // =========================================================
+
+  void _mostrarMensaje(String mensaje) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            mensaje,
+            style: GoogleFonts.nunito(),
+          ),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          backgroundColor: const Color(0xFF2971A4),
+        ),
+      );
+  }
+
+  // =========================================================
+  // BUILD
+  // =========================================================
+
   @override
   Widget build(BuildContext context) {
-    final favoritos = FavoritosService.favoritos;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -31,10 +58,9 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
         title: Text(
           'Favoritos',
           style: GoogleFonts.nunito(
-            textStyle: const TextStyle(
-              fontSize: 22,
-              color: Colors.white,
-            ),
+            fontSize: 22,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
           ),
         ),
         shape: const RoundedRectangleBorder(
@@ -43,75 +69,159 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
           ),
         ),
       ),
-      body: favoritos.isEmpty
-          ? Center(
+      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: CartFavoritesService.obtenerFavoritosStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFF73C2FB),
+              ),
+            );
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'No se pudieron cargar tus favoritos.',
+                style: GoogleFonts.nunito(
+                  color: Colors.grey,
+                ),
+              ),
+            );
+          }
+
+          final favoritos = snapshot.data?.docs ?? [];
+
+          if (favoritos.isEmpty) {
+            return Center(
               child: Text(
                 'No tienes productos favoritos.',
-                style: GoogleFonts.nunito(fontSize: 16, color: Colors.grey),
-              ),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(20),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                  mainAxisExtent: 200,
+                style: GoogleFonts.nunito(
+                  fontSize: 16,
+                  color: Colors.grey,
                 ),
-                itemCount: favoritos.length,
-                itemBuilder: (context, index) {
-                  final producto = favoritos[index];
+              ),
+            );
+          }
 
-                  return Stack(
-                    children: [
-                      ProductoCard(
-                        imagen: producto["imagen"]!,
-                        nombre: producto["nombre"]!,
-                        precio: producto["precio"]!,
-                        puntuacion: 4.5,
-                        comentarios: 15,
-                        onAddToCart: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${producto["nombre"]} agregado al carrito 🛒',
-                                style: GoogleFonts.nunito(),
-                              ),
-                              duration: const Duration(seconds: 2),
-                              backgroundColor: const Color(0xFF2971A4),
-                            ),
-                          );
-                        },
-                      ),
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: GridView.builder(
+              padding: const EdgeInsets.only(
+                bottom: 20,
+              ),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+                mainAxisExtent: 240,
+              ),
+              itemCount: favoritos.length,
+              itemBuilder: (context, index) {
+                final doc = favoritos[index];
+                final producto = doc.data();
+                final id = doc.id;
+                final sku = producto['sku']?.toString().trim() ?? id;
+                final nombre = producto['nombre']?.toString() ?? '';
+                final puntuacion = (producto['puntuacion'] as num?)?.toDouble() ?? 0.0;
+                final comentarios = (producto['comentarios'] as num?)?.toInt() ?? 0;
+                final estaProcesando = _procesando.contains(id);
+
+                return Stack(
+                  children: [
+                    // =========================================
+                    // CARD
+                    // =========================================
+                    ProductoCard(
+                      imagen: producto['imagen']?.toString() ?? '',
+                      nombre: nombre,
+                      precio: producto['precio']?.toString() ?? '',
+                      marca: producto['marca']?.toString(),
+                      sku: sku,
+                      puntuacion: puntuacion,
+                      comentarios: comentarios,
+                      agregando: estaProcesando,
+                      onAddToCart: () async {
+                        if (estaProcesando) return;
+
+                        setState(() {
+                          _procesando.add(id);
+                        });
+
+                        try {
+                          await CartFavoritesService.agregarAlCarrito(producto);
+                          _mostrarMensaje('$nombre agregado al carrito');
+                        } catch (e) {
+                          _mostrarMensaje('No se pudo agregar al carrito.');
+                        } finally {
+                          if (mounted) {
+                            setState(() {
+                              _procesando.remove(id);
+                            });
+                          }
+                        }
+                      },
+                    ),
+
+                    // =========================================
+                    // CORAZÓN FAVORITO
+                    // =========================================
+                    Positioned(
+                      top: 5,
+                      right: 5,
+                      child: GestureDetector(
+                        onTap: () {}, // ESTA LÍNEA ES LA MAGIA QUE ABSORBE EL TOQUE
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(
+                            minWidth: 34,
+                            minHeight: 34,
                           ),
-                          child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                FavoritosService.eliminar(
-                                  producto["nombre"]!,
-                                );
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.favorite,
-                              color: Color(0xFF73C2FB),
-                            ),
-                          ),
+                          onPressed: estaProcesando
+                              ? null
+                              : () async {
+                                  setState(() {
+                                    _procesando.add(id);
+                                  });
+
+                                  try {
+                                    await CartFavoritesService.eliminarFavorito(sku);
+                                    _mostrarMensaje('Eliminado de favoritos');
+                                  } catch (e) {
+                                    _mostrarMensaje('No se pudo eliminar.');
+                                  } finally {
+                                    if (mounted) {
+                                      setState(() {
+                                        _procesando.remove(id);
+                                      });
+                                    }
+                                  }
+                                },
+                          icon: estaProcesando
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Color(0xFF73C2FB),
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.favorite,
+                                  color: Color(0xFF73C2FB),
+                                  size: 24,
+                                ),
                         ),
                       ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                  ],
+                );
+              },
             ),
+          );
+        },
+      ),
     );
   }
 }

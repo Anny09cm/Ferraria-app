@@ -8,10 +8,18 @@ class CategoriaScreen extends StatelessWidget {
   final String categoria;
   final List<Map<String, String>> productos;
 
+  final VoidCallback? onIrAlCarrito;
+
+  // true = vendedor
+  // false = cliente
+  final bool esVendedor;
+
   const CategoriaScreen({
     super.key,
     required this.categoria,
     required this.productos,
+    this.onIrAlCarrito,
+    this.esVendedor = false,
   });
 
   @override
@@ -23,14 +31,8 @@ class CategoriaScreen extends StatelessWidget {
         elevation: 4,
         automaticallyImplyLeading: false,
         centerTitle: true,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(15),
-          ),
-        ),
         leading: IconButton(
           onPressed: () {
-  
             Navigator.pop(context);
           },
           icon: const Icon(
@@ -47,51 +49,75 @@ class CategoriaScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(15),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 20,
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 15,
-                  mainAxisSpacing: 15,
-                  mainAxisExtent: 160,
-                ),
-                itemCount: productos.length,
-                itemBuilder: (context, index) {
-                  final item = productos[index];
+        child: GridView.builder(
+          physics: const BouncingScrollPhysics(),
+          gridDelegate:
+              const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 15,
+            mainAxisExtent: 160,
+          ),
+          itemCount: productos.length,
+          itemBuilder: (context, index) {
+            final item = productos[index];
 
-                  return GestureDetector(
-                    onTap: () {
-                      final subcategoria = item["nombre"] ?? '';
+            final subcategoria =
+                item["nombre"] ?? '';
 
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ListaProductosScreen(
-                            tipo: subcategoria, 
-                          ),
-                        ),
-                      );
-                    },
-                    child: ProductoCard(
-                      nombre: item["nombre"] ?? '',
-                      imagen: item["imagen"] ?? '',
-                      precio: item["precio"] ?? '',
-                      puntuacion: double.tryParse(item["puntuacion"] ?? '0.0') ?? 0.0,
-                      comentarios: int.tryParse(item["comentarios"] ?? '0') ?? 0,
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ListaProductosScreen(
+                      tipo: subcategoria,
+                      esVendedor: esVendedor,
+                      onIrAlCarrito:
+                          onIrAlCarrito,
                     ),
-                  );
-                },
+                  ),
+                );
+              },
+              child: ProductoCard(
+                nombre: item["nombre"] ?? '',
+                imagen: item["imagen"] ?? '',
+                precio: item["precio"] ?? '',
+                puntuacion:
+                    double.tryParse(
+                          item["puntuacion"] ??
+                              '0.0',
+                        ) ??
+                        0.0,
+                comentarios:
+                    int.tryParse(
+                          item["comentarios"] ??
+                              '0',
+                        ) ??
+                        0,
+
+                // NO ponemos onAddToCart aquí.
+                //
+                // Esta tarjeta solamente representa
+                // la subcategoría.
+                //
+                // El ProductoCard no mostrará carrito
+                // porque onAddToCart es null.
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

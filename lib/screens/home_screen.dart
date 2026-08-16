@@ -1,68 +1,80 @@
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:ferraria/screens/navbar_cliente.dart';
-import 'package:ferraria/screens/navbar_vendedor.dart';
+import 'package:ferraria/screens/lista_productos_screen.dart';
+import 'package:ferraria/screens/producto_especifico_screen.dart';
 import 'package:ferraria/widgets/marca_card.dart';
 import 'package:ferraria/widgets/producto_card.dart';
+import 'package:ferraria/services/cart_favorites_service.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final VoidCallback? onIrAlCarrito;
+
+  const HomeScreen({
+    super.key,
+    this.onIrAlCarrito,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // 1. Lista de marcas
-    final List<String> marcas = [
-      'assets/images/truper.png',
-      'assets/images/dewalt.png',
-      'assets/images/makita.png',
-      'assets/images/urrea.png',
-    ];
+    // ============================================================
+    // MARCAS POPULARES
+    // ============================================================
 
-    final List<Map<String, dynamic>> volverAComprarProductos = [
+    final List<Map<String, String>> marcas = [
       {
-        'nombre': 'Esmeriladora Angular 4-1/2"',
-        'precio': 'MXN 1,250',
-        'imagen': 'assets/images/esmeriladora.png',
-        'puntuacion': 4.8,
-        'comentarios': 24,
+        'nombre': 'Truper',
+        'imagen': 'assets/images/truper.png',
       },
       {
-        'nombre': 'Juego de Llaves Combinadas',
-        'precio': 'MXN 480',
-        'imagen': 'assets/images/juego.png',
-        'puntuacion': 4.5,
-        'comentarios': 12,
+        'nombre': 'DeWalt',
+        'imagen': 'assets/images/dewalt.png',
       },
       {
-        'nombre': 'Rotomartillo Inalámbrico 20V',
-        'precio': 'MXN 2,100',
-        'imagen': 'assets/images/rotomartillo.png',
-        'puntuacion': 4.9,
-        'comentarios': 45,
+        'nombre': 'Makita',
+        'imagen': 'assets/images/makita.png',
       },
       {
-        'nombre': 'Podadora de Pasto 18"',
-        'precio': 'MXN 3,450',
-        'imagen': 'assets/images/podadora.png',
-        'puntuacion': 4.2,
-        'comentarios': 8,
+        'nombre': 'Urrea',
+        'imagen': 'assets/images/urrea.png',
+      },
+      {
+        'nombre': 'Hermex',
+        'imagen': 'assets/images/hermex.png',
       },
     ];
 
     return Scaffold(
       backgroundColor: Colors.white,
+
+      // ==========================================================
+      // DRAWER
+      // ==========================================================
+
       drawer: const NavBarCliente(),
+
+      // ==========================================================
+      // APP BAR
+      // ==========================================================
+
       appBar: AppBar(
         backgroundColor: const Color(0xFF73C2FB),
         foregroundColor: Colors.white,
+        elevation: 4,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(10),
           ),
         ),
       ),
+
+      // ==========================================================
+      // BODY
+      // ==========================================================
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -70,14 +82,23 @@ class HomeScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 5),
 
+            // ======================================================
+            // OFERTAS DEL DÍA
+            // ======================================================
+
             Text(
               '¡Ofertas del día!',
               style: GoogleFonts.nunito(
                 fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
 
             const SizedBox(height: 15),
+
+            // ======================================================
+            // CARRUSEL DE OFERTAS
+            // ======================================================
 
             CarouselSlider(
               items: [
@@ -114,6 +135,10 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
+            // ======================================================
+            // VOLVER A COMPRAR
+            // ======================================================
+
             Text(
               'Volver a comprar',
               style: GoogleFonts.nunito(
@@ -124,41 +149,236 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 15),
 
-           
+            // ======================================================
+            // PRODUCTOS DESDE FIRESTORE
+            // ======================================================
+
             SizedBox(
-              height: 200, 
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                itemCount: volverAComprarProductos.length,
-                itemBuilder: (context, index) {
-                  final prod = volverAComprarProductos[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 15),
-                    child: SizedBox(
-                      width: 160,
-                      child: ProductoCard(
-                        imagen: prod['imagen'],
-                        nombre: prod['nombre'],
-                        precio: prod['precio'],
-                        puntuacion: prod['puntuacion'],
-                        comentarios: prod['comentarios'],
-                        onAddToCart: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('${prod['nombre']} agregado al carrito'),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        },
+              height: 220,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('productos')
+                    .limit(6)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  // ------------------------------------------------
+                  // CARGANDO
+                  // ------------------------------------------------
+
+                  if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF73C2FB),
                       ),
-                    ),
+                    );
+                  }
+
+                  // ------------------------------------------------
+                  // ERROR
+                  // ------------------------------------------------
+
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Error al cargar productos',
+                        style: GoogleFonts.nunito(
+                          color: Colors.red,
+                        ),
+                      ),
+                    );
+                  }
+
+                  // ------------------------------------------------
+                  // DOCUMENTOS
+                  // ------------------------------------------------
+
+                  final docs = snapshot.data?.docs ?? [];
+
+                  if (docs.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No hay productos recientes',
+                        style: GoogleFonts.nunito(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    );
+                  }
+
+                  // ------------------------------------------------
+                  // LISTA HORIZONTAL
+                  // ------------------------------------------------
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: docs.length,
+                    itemBuilder: (context, index) {
+                      final prod =
+                          docs[index].data() as Map<String, dynamic>;
+
+                      final nombre =
+                          prod["nombre"]?.toString() ?? '';
+
+                      final precio =
+                          prod["precio"]?.toString() ?? '';
+
+                      final marca =
+                          prod["marca"]?.toString() ?? 'Generico';
+
+                      final imagen =
+                          prod["imagen"]?.toString() ?? '';
+
+                      final puntuacion =
+                          double.tryParse(
+                                prod["puntuacion"]?.toString() ??
+                                    '0.0',
+                              ) ??
+                              0.0;
+
+                      final comentarios =
+                          int.tryParse(
+                                prod["comentarios"]?.toString() ??
+                                    '0',
+                              ) ??
+                              0;
+
+                      final imagenes =
+                          (prod["imagenes"] as List<dynamic>?)
+                              ?.cast<String>();
+
+                      final especificaciones =
+                          (prod["especificaciones"]
+                              as List<dynamic>?)
+                              ?.cast<String>();
+
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          right: 15,
+                        ),
+                        child: SizedBox(
+                          width: 160,
+                          child: GestureDetector(
+                            // ==================================================
+                            // ABRIR PRODUCTO
+                            // ==================================================
+
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProductoEspecificoScreen(
+                                    nombre: nombre,
+                                    precio: precio,
+                                    marca: marca,
+                                    imagen: imagen,
+                                    imagenes: imagenes,
+                                    puntuacion: puntuacion,
+                                    comentarios: comentarios,
+                                    descripcion:
+                                        prod["descripcion"]
+                                            ?.toString(),
+                                    modelo:
+                                        prod["modelo"]?.toString(),
+                                    especificaciones:
+                                        especificaciones,
+                                  ),
+                                ),
+                              );
+                            },
+
+                            // ==================================================
+                            // PRODUCT CARD
+                            // ==================================================
+
+                            child: ProductoCard(
+                              imagen: imagen,
+                              nombre: nombre,
+                              precio: precio,
+                              marca: prod['marca']?.toString(),
+                              puntuacion: puntuacion,
+                              comentarios: comentarios,
+
+                              // ================================================
+                              // AGREGAR AL CARRITO
+                              // ================================================
+                              //
+                              // HomeScreen es para CLIENTES.
+                              // Por eso el botón del carrito sí aparece.
+                              //
+                              // ================================================
+
+                              onAddToCart: () async {
+                                try {
+                                  await CartFavoritesService
+                                      .agregarAlCarrito(prod);
+
+                                  if (!context.mounted) {
+                                    return;
+                                  }
+
+                                  ScaffoldMessenger.of(context)
+                                      .hideCurrentSnackBar();
+
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        '$nombre agregado al carrito 🛒',
+                                        style:
+                                            GoogleFonts.nunito(),
+                                      ),
+                                      duration:
+                                          const Duration(seconds: 2),
+                                      behavior:
+                                          SnackBarBehavior.floating,
+                                      backgroundColor:
+                                          const Color(0xFF2971A4),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  debugPrint(
+                                    'Error al agregar al carrito: $e',
+                                  );
+
+                                  if (!context.mounted) {
+                                    return;
+                                  }
+
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        'No se pudo agregar al carrito',
+                                        style:
+                                            GoogleFonts.nunito(),
+                                      ),
+                                      duration:
+                                          const Duration(seconds: 2),
+                                      behavior:
+                                          SnackBarBehavior.floating,
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 25),
+
+            // ======================================================
+            // MARCAS POPULARES
+            // ======================================================
 
             Text(
               'Marcas populares',
@@ -170,31 +390,57 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 15),
 
+            // ======================================================
+            // LISTA DE MARCAS
+            // ======================================================
 
             SizedBox(
-              height: 100, 
+              height: 100,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
                 itemCount: marcas.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 15),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(width: 15),
                 itemBuilder: (context, index) {
+                  final marca = marcas[index];
+
                   return MarcaCard(
-                    imagenPath: marcas[index],
+                    imagenPath: marca['imagen']!,
                     onTap: () {
-                      // Filtrar por marca
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ListaProductosScreen(
+                            tipo: marca['nombre']!,
+                            esVendedor: false,
+                          ),
+                        ),
+                      );
                     },
                   );
                 },
               ),
             ),
 
-            SizedBox(height: MediaQuery.of(context).padding.bottom + 30)
+            // ======================================================
+            // ESPACIO FINAL
+            // ======================================================
+
+            SizedBox(
+              height:
+                  MediaQuery.of(context).padding.bottom + 30,
+            ),
           ],
         ),
       ),
     );
   }
+
+  // ============================================================
+  // WIDGET OFERTA
+  // ============================================================
 
   Widget _crearOferta({
     required String imagen,
@@ -216,6 +462,10 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // ========================================================
+          // IMAGEN
+          // ========================================================
+
           Expanded(
             child: ClipRRect(
               borderRadius: const BorderRadius.horizontal(
@@ -228,13 +478,22 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
           ),
+
+          // ========================================================
+          // INFORMACIÓN
+          // ========================================================
+
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment:
+                    MainAxisAlignment.center,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
                 children: [
+                  // OFERTA
+
                   Text(
                     'OFERTA',
                     style: GoogleFonts.nunito(
@@ -243,7 +502,11 @@ class HomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+
                   const SizedBox(height: 8),
+
+                  // NOMBRE
+
                   Text(
                     nombre,
                     maxLines: 2,
@@ -253,7 +516,11 @@ class HomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+
                   const SizedBox(height: 8),
+
+                  // PRECIO
+
                   Text(
                     precio,
                     style: GoogleFonts.nunito(

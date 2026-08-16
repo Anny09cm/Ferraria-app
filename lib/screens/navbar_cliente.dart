@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:ferraria/screens/carrito_screen.dart';
 import 'package:ferraria/screens/favoritos_screen.dart';
+import 'package:ferraria/screens/direcciones_screen.dart';
+import 'package:ferraria/screens/metodos_pago_screen.dart';
 
 class NavBarCliente extends StatelessWidget {
   const NavBarCliente({super.key});
@@ -115,6 +117,12 @@ class NavBarCliente extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DireccionesScreen(),
+              ),
+            );
           },
         ),
         ListTile(
@@ -130,6 +138,12 @@ class NavBarCliente extends StatelessWidget {
           ),
           onTap: () {
             Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MetodosPagoScreen(),
+              ),
+            );
           },
         ),
         ListTile(

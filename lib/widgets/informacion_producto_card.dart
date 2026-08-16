@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProductoInfoCard extends StatefulWidget {
-  final List<String> imagenes; // Lista de imágenes para el carrusel
+  final List<String> imagenes;
   final String nombre;
   final String precio;
   final String sku;
@@ -27,11 +27,13 @@ class ProductoInfoCard extends StatefulWidget {
 
 class _ProductoInfoCardState extends State<ProductoInfoCard> {
   int _paginaActual = 0;
+
   late PageController _pageController;
 
   @override
   void initState() {
     super.initState();
+
     _pageController = PageController();
   }
 
@@ -56,12 +58,18 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // 1. IMAGEN / CARRUSEL
+            // =================================================
+            // IMÁGENES
+            // =================================================
+
             SizedBox(
               height: 200,
               width: double.infinity,
@@ -83,12 +91,17 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
                         return Image.asset(
                           widget.imagenes[index],
                           fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) =>
-                              const Icon(
-                            Icons.image_not_supported_outlined,
-                            color: Colors.grey,
-                            size: 40,
-                          ),
+                          errorBuilder: (
+                            context,
+                            error,
+                            stackTrace,
+                          ) {
+                            return const Icon(
+                              Icons.image_not_supported_outlined,
+                              color: Colors.grey,
+                              size: 40,
+                            );
+                          },
                         );
                       },
                     ),
@@ -96,30 +109,44 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
 
             const SizedBox(height: 12),
 
+            // =================================================
+            // INDICADORES
+            // =================================================
 
             if (widget.imagenes.length > 1)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(widget.imagenes.length, (index) {
-                  final estaActivo = _paginaActual == index;
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    width: estaActivo ? 10 : 8,
-                    height: estaActivo ? 10 : 8,
-                    decoration: BoxDecoration(
-                      color: estaActivo
-                          ? const Color(0xFF73C2FB) 
-                          : const Color(0xFFC4C4C4), 
-                      shape: BoxShape.circle,
-                    ),
-                  );
-                }),
+                children: List.generate(
+                  widget.imagenes.length,
+                  (index) {
+                    final activo = _paginaActual == index;
+
+                    return AnimatedContainer(
+                      duration: const Duration(
+                        milliseconds: 250,
+                      ),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 3,
+                      ),
+                      width: activo ? 10 : 8,
+                      height: activo ? 10 : 8,
+                      decoration: BoxDecoration(
+                        color: activo
+                            ? const Color(0xFF73C2FB)
+                            : const Color(0xFFC4C4C4),
+                        shape: BoxShape.circle,
+                      ),
+                    );
+                  },
+                ),
               ),
 
             const SizedBox(height: 16),
 
-            // 3. NOMBRE
+            // =================================================
+            // NOMBRE
+            // =================================================
+
             Text(
               widget.nombre,
               textAlign: TextAlign.center,
@@ -132,7 +159,6 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
 
             const SizedBox(height: 12),
 
-            // 4. DIVISOR
             const Divider(
               color: Color(0xFFE0E0E0),
               thickness: 1,
@@ -141,12 +167,15 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
 
             const SizedBox(height: 12),
 
-            // 5. SECCIÓN INFERIOR
+            // =================================================
+            // PRECIO + SKU + ESTRELLAS
+            // =================================================
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-
+                // PRECIO / SKU
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -170,6 +199,7 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
                   ],
                 ),
 
+                // ESTRELLAS
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -185,7 +215,12 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
                             borderRadius: BorderRadius.circular(20),
                             boxShadow: const [
                               BoxShadow(
-                                color: Color.fromARGB(112, 43, 42, 42),
+                                color: Color.fromARGB(
+                                  112,
+                                  43,
+                                  42,
+                                  42,
+                                ),
                                 blurRadius: 5,
                                 offset: Offset(0, 2),
                               ),
@@ -193,15 +228,19 @@ class _ProductoInfoCardState extends State<ProductoInfoCard> {
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
-                            children: List.generate(5, (index) {
-                              return Icon(
-                                Icons.star_rounded,
-                                size: 16,
-                                color: index < widget.puntuacion.floor()
-                                    ? const Color(0xFFFFC107)
-                                    : const Color(0xFFE0E0E0),
-                              );
-                            }),
+                            children: List.generate(
+                              5,
+                              (index) {
+                                return Icon(
+                                  Icons.star_rounded,
+                                  size: 16,
+                                  color: index <
+                                          widget.puntuacion.floor()
+                                      ? const Color(0xFFFFC107)
+                                      : const Color(0xFFE0E0E0),
+                                );
+                              },
+                            ),
                           ),
                         ),
                         const SizedBox(width: 5),

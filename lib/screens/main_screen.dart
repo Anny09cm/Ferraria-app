@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-
 import 'package:ferraria/screens/catalogo_screen.dart';
 import 'package:ferraria/screens/search_screen.dart';
 import 'package:ferraria/screens/home_screen.dart';
 import 'package:ferraria/screens/carrito_screen.dart';
 import 'package:ferraria/screens/perfil_screen.dart';
-
 import 'package:ferraria/screens/dashboard_vendedor_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -21,7 +18,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int index = 2;
-
   String _rol = 'cliente';
   bool _isLoading = true;
 
@@ -33,37 +29,37 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> _obtenerRolUsuario() async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
-
     if (currentUser != null) {
       try {
-        final DocumentSnapshot userDoc =
-            await FirebaseFirestore.instance
-                .collection('usuarios')
-                .doc(currentUser.uid)
-                .get();
-
+        final DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(currentUser.uid)
+            .get();
         if (userDoc.exists && userDoc.data() != null) {
           final data = userDoc.data() as Map<String, dynamic>;
-
           if (mounted) {
             setState(() {
-              _rol = data['rol'] ?? 'cliente';
+              _rol = data['rol']?.toString() ?? 'cliente';
               _isLoading = false;
             });
           }
-
           return;
         }
       } catch (e) {
         debugPrint('Error al obtener el rol: $e');
       }
     }
-
     if (mounted) {
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  void _irAlCarrito() {
+    setState(() {
+      index = 3;
+    });
   }
 
   @override
@@ -81,77 +77,41 @@ class _MainScreenState extends State<MainScreen> {
 
     final bool esVendedor = _rol == 'vendedor';
 
-
     final List<Widget> screens = esVendedor
         ? [
             const DashboardVendedorScreen(),
             const SearchScreen(),
-            const DashboardVendedorScreen(),
+            const CatalogoScreen(esVendedor: true),
             const PerfilScreen(),
           ]
-
-
         : [
-            const CatalogoScreen(),
+            CatalogoScreen(onIrAlCarrito: _irAlCarrito),
             const SearchScreen(),
-            const HomeScreen(),
+            HomeScreen(onIrAlCarrito: _irAlCarrito),
             const CarritoScreen(),
             const PerfilScreen(),
           ];
 
-
-
     final List<Widget> items = esVendedor
         ? const [
-            Icon(
-              Icons.dashboard_outlined,
-              size: 30,
-            ),
-            Icon(
-              Icons.search,
-              size: 30,
-            ),
-            Icon(
-              Icons.storefront,
-              size: 30,
-            ),
-            Icon(
-              Icons.person,
-              size: 30,
-            ),
+            Icon(Icons.dashboard_outlined, size: 30),
+            Icon(Icons.search, size: 30),
+            Icon(Icons.storefront, size: 30),
+            Icon(Icons.person, size: 30),
           ]
         : const [
-            Icon(
-              Icons.grid_view,
-              size: 30,
-            ),
-            Icon(
-              Icons.search,
-              size: 30,
-            ),
-            Icon(
-              Icons.home,
-              size: 30,
-            ),
-            Icon(
-              Icons.shopping_cart,
-              size: 30,
-            ),
-            Icon(
-              Icons.person,
-              size: 30,
-            ),
+            Icon(Icons.grid_view, size: 30),
+            Icon(Icons.search, size: 30),
+            Icon(Icons.home, size: 30),
+            Icon(Icons.shopping_cart, size: 30),
+            Icon(Icons.person, size: 30),
           ];
 
-    // Evita errores si cambia la cantidad de pantallas
-    final int safeIndex =
-        index >= screens.length ? 0 : index;
+    final int safeIndex = index >= screens.length ? 0 : index;
 
     return Scaffold(
       extendBody: true,
-
       body: screens[safeIndex],
-
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
           iconTheme: const IconThemeData(
@@ -160,23 +120,13 @@ class _MainScreenState extends State<MainScreen> {
         ),
         child: CurvedNavigationBar(
           color: const Color(0xFF73C2FB),
-
-          buttonBackgroundColor:
-              const Color(0xFF73C2FB),
-
+          buttonBackgroundColor: const Color(0xFF73C2FB),
           backgroundColor: Colors.transparent,
-
           height: 60,
-
           animationCurve: Curves.easeInOut,
-
-          animationDuration:
-              const Duration(milliseconds: 300),
-
+          animationDuration: const Duration(milliseconds: 300),
           items: items,
-
           index: safeIndex,
-
           onTap: (value) {
             setState(() {
               index = value;

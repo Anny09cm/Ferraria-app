@@ -1,21 +1,9 @@
 name: ferraria
-description: "A new Flutter project."
+description: "Aplicación de una ferreteria"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-# In Windows, build-name is used as the major, minor, and patch parts
-# of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
 environment:
@@ -82,9 +70,18 @@ flutter:
   - assets/images/martilloagarrecurvo2.png
   - assets/images/martilloagarrecurvo3.png
   - assets/images/martilloagarrecurvo4.png
+  - assets/images/martillodeuna1.png
+  - assets/images/martillodeuna2.png
+  - assets/images/martillodeuna3.png
   - assets/images/destornillador.png
+  - assets/images/desarmadorplano1.png
+  - assets/images/desarmadorplano2.png
+  - assets/images/desarmadorcruz1.png
+  - assets/images/desarmadorcruz2.png
   - assets/images/alicate.png
+  - assets/images/pinzauniversal.png
   - assets/images/taladro.png
+  - assets/images/taladroinalambrico.png
   - assets/images/esmeriladora.png
   - assets/images/rotomartillo.png
   - assets/images/juego.png
@@ -93,6 +90,30 @@ flutter:
   - assets/images/dewalt.png
   - assets/images/urrea.png
   - assets/images/makita.png
+  - assets/images/hermex.png
+  - assets/images/cablenegro1.png
+  - assets/images/cablenegro2.png
+  - assets/images/cementogris1.png
+  - assets/images/cementogris2.png
+  - assets/images/tubopvc1.png
+  - assets/images/tubopvc2.png
+  - assets/images/tubopvc3.png
+  - assets/images/cajatornillos1.png
+  - assets/images/cajatornillos2.png
+  - assets/images/cajatornillos3.png
+  - assets/images/cajatornillos4.png
+  - assets/images/casco.png
+  - assets/images/pinzajardin1.png
+  - assets/images/pinzajardin2.png
+  - assets/images/pinzajardin3.png
+  - assets/images/cables.png
+  - assets/images/focos.png
+  - assets/images/interruptores.png
+  - assets/images/tubospvc.png
+  - assets/images/grifos.png
+  - assets/images/llaves.png
+  - assets/images/pinturablanca1.png
+  - assets/images/pinturablanca2.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

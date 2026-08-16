@@ -2,27 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:ferraria/screens/navbar_vendedor.dart';
+import 'package:ferraria/screens/productos_vendedor_screen.dart';
+import 'package:ferraria/screens/pedidos_vendedor_screen.dart';
 
 class DashboardVendedorScreen extends StatelessWidget {
   const DashboardVendedorScreen({super.key});
 
+  // =========================================================
+  // COLORES DE FERRARIA
+  // =========================================================
+
+  static const Color azulClaro = Color(0xFF73C2FB);
+  static const Color azulOscuro = Color(0xFF2971A4);
+
+  static const Color fondo = Color(0xFFF5F8FA);
+  static const Color texto = Color(0xFF1F2937);
+  static const Color textoSecundario = Color(0xFF6B7280);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F7),
+      backgroundColor: fondo,
 
-      // Menú lateral
+      // =====================================================
+      // MENÚ LATERAL
+      // =====================================================
+
       drawer: const NavBarVendedor(),
 
+      // =====================================================
+      // APP BAR
+      // =====================================================
+
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF4B400),
+        backgroundColor: azulClaro,
         foregroundColor: Colors.white,
-        elevation: 4,
+        elevation: 0,
+        centerTitle: true,
 
         title: Text(
           'Dashboard',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
+          style: GoogleFonts.nunito(
+            fontSize: 21,
+            fontWeight: FontWeight.w800,
           ),
         ),
 
@@ -33,19 +55,27 @@ class DashboardVendedorScreen extends StatelessWidget {
         ),
       ),
 
+      // =====================================================
+      // BODY
+      // =====================================================
+
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 22, 20, 35),
 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // Bienvenida
+            // =================================================
+            // BIENVENIDA
+            // =================================================
+
             Text(
-              'Bienvenido, vendedor',
-              style: GoogleFonts.poppins(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
+              'Bienvenido, vendedor 👋',
+              style: GoogleFonts.nunito(
+                fontSize: 26,
+                fontWeight: FontWeight.w800,
+                color: texto,
               ),
             ),
 
@@ -53,161 +83,182 @@ class DashboardVendedorScreen extends StatelessWidget {
 
             Text(
               'Aquí puedes consultar el resumen de tu tienda.',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.nunito(
                 fontSize: 14,
-                color: Colors.grey,
+                color: textoSecundario,
               ),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 28),
 
-            // Ventas
+            // =================================================
+            // RESUMEN
+            // =================================================
+
+            Text(
+              'Resumen de la tienda',
+              style: GoogleFonts.nunito(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                color: texto,
+              ),
+            ),
+
+            const SizedBox(height: 14),
+
             _crearTarjeta(
-              icono: Icons.attach_money,
+              icono: Icons.attach_money_rounded,
               titulo: 'Ventas del día',
               valor: '\$8,450',
-              color: Colors.green,
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 13),
 
-            // Pedidos
             _crearTarjeta(
-              icono: Icons.shopping_bag,
+              icono: Icons.shopping_bag_outlined,
               titulo: 'Pedidos pendientes',
               valor: '12',
-              color: Colors.orange,
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 13),
 
-            // Productos
             _crearTarjeta(
-              icono: Icons.inventory_2,
+              icono: Icons.inventory_2_outlined,
               titulo: 'Productos disponibles',
               valor: '156',
-              color: Colors.blue,
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 13),
 
-            // Clientes
             _crearTarjeta(
-              icono: Icons.people,
+              icono: Icons.people_outline_rounded,
               titulo: 'Clientes',
               valor: '84',
-              color: Colors.purple,
             ),
 
             const SizedBox(height: 30),
 
+            // =================================================
+            // ACCIONES RÁPIDAS
+            // =================================================
+
             Text(
               'Acciones rápidas',
-              style: GoogleFonts.poppins(
-                fontSize: 21,
-                fontWeight: FontWeight.bold,
+              style: GoogleFonts.nunito(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                color: texto,
               ),
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 14),
 
             Row(
               children: [
 
+                // =============================================
+                // AGREGAR PRODUCTO
+                // =============================================
+
                 Expanded(
                   child: _botonAccion(
-                    icono: Icons.add_box,
+                    icono: Icons.add_box_outlined,
                     texto: 'Agregar producto',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProductosVendedorScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ),
 
-                const SizedBox(width: 15),
+                const SizedBox(width: 14),
+
+                // =============================================
+                // VER PEDIDOS
+                // =============================================
 
                 Expanded(
                   child: _botonAccion(
-                    icono: Icons.receipt_long,
+                    icono: Icons.receipt_long_outlined,
                     texto: 'Ver pedidos',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PedidosVendedorScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 30),
+
+            // =================================================
+            // ACTIVIDAD RECIENTE
+            // =================================================
 
             Text(
               'Actividad reciente',
-              style: GoogleFonts.poppins(
-                fontSize: 21,
-                fontWeight: FontWeight.bold,
+              style: GoogleFonts.nunito(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+                color: texto,
               ),
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 14),
 
-            Card(
-              color: Colors.white,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-
-              child: ListTile(
-                leading: const CircleAvatar(
-                  backgroundColor: Color(0xFFF4B400),
-                  child: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
+            _crearActividad(
+              icono: Icons.shopping_cart_outlined,
+              titulo: 'Nuevo pedido recibido',
+              subtitulo: 'Pedido pendiente de revisión',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PedidosVendedorScreen(),
                   ),
-                ),
-
-                title: const Text(
-                  'Nuevo pedido recibido',
-                ),
-
-                subtitle: const Text(
-                  'Pedido #00125',
-                ),
-
-                trailing: const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                ),
-              ),
+                );
+              },
             ),
 
             const SizedBox(height: 10),
 
-            Card(
-              color: Colors.white,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-
-              child: ListTile(
-                leading: const CircleAvatar(
-                  backgroundColor: Colors.green,
-                  child: Icon(
-                    Icons.check,
-                    color: Colors.white,
+            _crearActividad(
+              icono: Icons.check_circle_outline_rounded,
+              titulo: 'Gestiona tus pedidos',
+              subtitulo: 'Consulta el estado de tus ventas',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PedidosVendedorScreen(),
                   ),
-                ),
+                );
+              },
+            ),
 
-                title: const Text(
-                  'Pedido completado',
-                ),
+            const SizedBox(height: 10),
 
-                subtitle: const Text(
-                  'Pedido #00120',
-                ),
-
-                trailing: const Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                ),
-              ),
+            _crearActividad(
+              icono: Icons.inventory_2_outlined,
+              titulo: 'Administra tus productos',
+              subtitulo: 'Agrega y modifica productos',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProductosVendedorScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -215,50 +266,71 @@ class DashboardVendedorScreen extends StatelessWidget {
     );
   }
 
-  // Tarjetas de información
+  // =========================================================
+  // TARJETA DE INFORMACIÓN
+  // =========================================================
+
   Widget _crearTarjeta({
     required IconData icono,
     required String titulo,
     required String valor,
-    required Color color,
   }) {
-    return Card(
-      color: Colors.white,
-      elevation: 3,
+    return Container(
+      width: double.infinity,
 
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
+      padding: const EdgeInsets.all(18),
+
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.045),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+
+        border: Border.all(
+          color: Colors.grey.shade100,
+        ),
       ),
 
-      child: Padding(
-        padding: const EdgeInsets.all(18),
+      child: Row(
+        children: [
 
-        child: Row(
-          children: [
+          // ICONO
+          Container(
+            width: 56,
+            height: 56,
 
-            CircleAvatar(
-              radius: 28,
-              backgroundColor: color.withOpacity(0.15),
-
-              child: Icon(
-                icono,
-                color: color,
-                size: 30,
-              ),
+            decoration: BoxDecoration(
+              color: azulClaro.withOpacity(0.16),
+              borderRadius: BorderRadius.circular(16),
             ),
 
-            const SizedBox(width: 15),
+            child: Icon(
+              icono,
+              color: azulOscuro,
+              size: 29,
+            ),
+          ),
 
-            Column(
+          const SizedBox(width: 16),
+
+          // INFORMACIÓN
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
 
                 Text(
                   titulo,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.nunito(
                     fontSize: 14,
-                    color: Colors.grey,
+                    fontWeight: FontWeight.w600,
+                    color: textoSecundario,
                   ),
                 ),
 
@@ -266,70 +338,207 @@ class DashboardVendedorScreen extends StatelessWidget {
 
                 Text(
                   valor,
-                  style: GoogleFonts.poppins(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                  style: GoogleFonts.nunito(
+                    fontSize: 23,
+                    fontWeight: FontWeight.w800,
+                    color: texto,
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+
+          const Icon(
+            Icons.chevron_right_rounded,
+            color: Colors.grey,
+            size: 25,
+          ),
+        ],
       ),
     );
   }
 
-  // Botones de acciones rápidas
+  // =========================================================
+  // BOTÓN ACCIÓN RÁPIDA
+  // =========================================================
+
   Widget _botonAccion({
     required IconData icono,
     required String texto,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
+    return Material(
+      color: Colors.transparent,
 
-      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        onTap: onTap,
 
-      child: Container(
-        padding: const EdgeInsets.all(15),
+        borderRadius: BorderRadius.circular(20),
 
-        decoration: BoxDecoration(
-          color: Colors.white,
+        child: Ink(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 18,
+          ),
 
-          borderRadius: BorderRadius.circular(18),
+          decoration: BoxDecoration(
+            color: Colors.white,
 
-          boxShadow: const [
-            BoxShadow(
-              blurRadius: 5,
-              offset: Offset(0, 2),
-              color: Colors.black12,
-            ),
-          ],
-        ),
+            borderRadius: BorderRadius.circular(20),
 
-        child: Column(
-          children: [
-
-            const SizedBox(height: 5),
-
-            Icon(
-              icono,
-              color: const Color(0xFFF4B400),
-              size: 32,
+            border: Border.all(
+              color: azulClaro.withOpacity(0.25),
             ),
 
-            const SizedBox(height: 8),
-
-            Text(
-              texto,
-              textAlign: TextAlign.center,
-
-              style: GoogleFonts.poppins(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
+            ],
+          ),
+
+          child: Column(
+            children: [
+
+              Container(
+                width: 52,
+                height: 52,
+
+                decoration: BoxDecoration(
+                  color: azulClaro.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+
+                child: Icon(
+                  icono,
+                  color: azulOscuro,
+                  size: 28,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              Text(
+                texto,
+                textAlign: TextAlign.center,
+
+                style: GoogleFonts.nunito(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // =========================================================
+  // ACTIVIDAD
+  // =========================================================
+
+  Widget _crearActividad({
+    required IconData icono,
+    required String titulo,
+    required String subtitulo,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+
+      child: InkWell(
+        onTap: onTap,
+
+        borderRadius: BorderRadius.circular(18),
+
+        child: Ink(
+          width: double.infinity,
+
+          padding: const EdgeInsets.all(15),
+
+          decoration: BoxDecoration(
+            color: Colors.white,
+
+            borderRadius: BorderRadius.circular(18),
+
+            border: Border.all(
+              color: Colors.grey.shade100,
             ),
-          ],
+
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.035),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+
+          child: Row(
+            children: [
+
+              Container(
+                width: 48,
+                height: 48,
+
+                decoration: BoxDecoration(
+                  color: azulClaro.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+
+                child: Icon(
+                  icono,
+                  color: azulOscuro,
+                  size: 25,
+                ),
+              ),
+
+              const SizedBox(width: 13),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Text(
+                      titulo,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+
+                      style: GoogleFonts.nunito(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: texto,
+                      ),
+                    ),
+
+                    const SizedBox(height: 3),
+
+                    Text(
+                      subtitulo,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+
+                      style: GoogleFonts.nunito(
+                        fontSize: 13,
+                        color: textoSecundario,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: Colors.grey,
+                size: 23,
+              ),
+            ],
+          ),
         ),
       ),
     );

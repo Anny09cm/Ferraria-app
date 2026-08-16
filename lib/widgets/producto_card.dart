@@ -5,17 +5,23 @@ class ProductoCard extends StatelessWidget {
   final String imagen;
   final String nombre;
   final String? precio;
+  final String? marca;
+  final String? sku;
   final double? puntuacion;
   final int comentarios;
-  final VoidCallback? onAddToCart; 
+  final bool agregando;
+  final VoidCallback? onAddToCart;
 
   const ProductoCard({
     super.key,
     required this.imagen,
     required this.nombre,
     this.precio,
+    this.marca,
+    this.sku,
     this.puntuacion,
     this.comentarios = 0,
+    this.agregando = false,
     this.onAddToCart,
   });
 
@@ -30,10 +36,12 @@ class ProductoCard extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(10),
-        child: Column( 
-          // 1. Alinea todos los elementos de la columna a la izquierda
-          crossAxisAlignment: CrossAxisAlignment.start, 
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // =================================================
+            // IMAGEN
+            // =================================================
             SizedBox(
               height: 85,
               width: double.infinity,
@@ -42,92 +50,121 @@ class ProductoCard extends StatelessWidget {
                 child: Image.asset(
                   imagen,
                   fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) => const Icon(
-                    Icons.image_not_supported_outlined,
-                    color: Colors.grey,
-                  ),
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.image_not_supported_outlined,
+                      color: Colors.grey,
+                      size: 35,
+                    );
+                  },
                 ),
               ),
             ),
-
             const SizedBox(height: 6),
-
-            // 2. El nombre envuelto en Center para que sea el ÚNICO centrado
+            // =================================================
+            // NOMBRE
+            // =================================================
             Center(
               child: Text(
                 nombre,
                 textAlign: TextAlign.center,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.nunito(
                   fontSize: 14,
                   color: Colors.black,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-
             const SizedBox(height: 4),
-
-            // 3. El precio ahora sí se recarga totalmente a la izquierda
+            // =================================================
+            // PRECIO
+            // =================================================
             if (precio != null && precio!.isNotEmpty)
               Text(
-                '$precio',
+                precio!,
                 style: GoogleFonts.nunito(
-                  fontSize: 18, 
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF73C2FB),
                 ),
               ),
-
             const Spacer(),
-
-            // 4. Fila inferior con Puntuación y Carrito
+            // =================================================
+            // PARTE INFERIOR
+            // =================================================
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // ESTRELLAS
                 if (puntuacion != null && puntuacion! > 0)
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.star_rounded,
-                        color: Color(0xFFFFB800),
-                        size: 14,
-                      ),
-                      const SizedBox(width: 2),
-                      Text(
-                        puntuacion.toString(),
-                        style: GoogleFonts.nunito(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.star_rounded,
+                          color: Color(0xFFFFB800),
+                          size: 14,
                         ),
-                      ),
-                      const SizedBox(width: 2),
-                      Text(
-                        '($comentarios)',
-                        style: GoogleFonts.nunito(
-                          fontSize: 12,
-                          color: Colors.grey[600],
+                        const SizedBox(width: 2),
+                        Text(
+                          puntuacion!.toStringAsFixed(1),
+                          style: GoogleFonts.nunito(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 2),
+                        Flexible(
+                          child: Text(
+                            '($comentarios)',
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.nunito(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 else
-                  const SizedBox.shrink(), 
-
-                if (onAddToCart != null)
-                  InkWell(
-                    onTap: onAddToCart,
-                    borderRadius: BorderRadius.circular(10),
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF73C2FB),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.add_shopping_cart_rounded,
-                        color: Colors.white,
-                        size: 18,
+                  const Spacer(),
+                // =================================================
+                // CARRITO
+                // =================================================
+                // Solo aparece si onAddToCart existe.
+                // En vendedor será null.
+                // =================================================
+                if (onAddToCart != null || agregando)
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: agregando ? null : onAddToCart,
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        width: 38,
+                        height: 38,
+                        decoration: BoxDecoration(
+                          color: agregando
+                              ? Colors.grey.shade400
+                              : const Color(0xFF73C2FB),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: agregando
+                            ? const Padding(
+                                padding: EdgeInsets.all(9),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.add_shopping_cart_rounded,
+                                color: Colors.white,
+                                size: 19,
+                              ),
                       ),
                     ),
                   ),

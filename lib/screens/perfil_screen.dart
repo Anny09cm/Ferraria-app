@@ -1,9 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:ferraria/screens/login_screen.dart';
+import 'package:ferraria/screens/direcciones_screen.dart';
+import 'package:ferraria/screens/metodos_pago_screen.dart';
+import 'package:ferraria/screens/dashboard_vendedor_screen.dart';
+import 'package:ferraria/screens/pedidos_vendedor_screen.dart';
+import 'package:ferraria/screens/productos_vendedor_screen.dart';
 
 class PerfilScreen extends StatefulWidget {
   const PerfilScreen({super.key});
@@ -111,18 +117,39 @@ class _PerfilScreenState extends State<PerfilScreen> {
                     _buildGroupContainer([
                       _buildOptionTile(
                         icon: Icons.inventory_2_outlined,
-                        title: 'Mis Productos e Inventario',
-                        onTap: () {},
+                        title: 'Mis productos',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ProductosVendedorScreen(),
+                            ),
+                          );
+                        },
                       ),
                       _buildOptionTile(
                         icon: Icons.local_shipping_outlined,
-                        title: 'Pedidos por Entregar',
-                        onTap: () {},
+                        title: 'Pedidos por entregar',
+                        onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PedidosVendedorScreen(),
+                            ),
+                          );
+                        },
                       ),
                       _buildOptionTile(
                         icon: Icons.bar_chart_outlined,
-                        title: 'Ventas y Reportes',
-                        onTap: () {},
+                        title: 'Ventas y reportes',
+                        onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DashboardVendedorScreen(),
+                            ),
+                          );
+                        },
                       ),
                     ]),
                   ] else ...[
@@ -130,17 +157,26 @@ class _PerfilScreenState extends State<PerfilScreen> {
                     _buildGroupContainer([
                       _buildOptionTile(
                         icon: Icons.shopping_bag_outlined,
-                        title: 'Historial de Pedidos',
-                        onTap: () {},
+                        title: 'Historial de pedidos',
+                        onTap: () {
+
+                        },
                       ),
                       _buildOptionTile(
                         icon: Icons.location_on_outlined,
-                        title: 'Mis Direcciones de Envío',
-                        onTap: () {},
+                        title: 'Mis direcciones de envío',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DireccionesScreen(),
+                            ),
+                          );
+                        },
                       ),
                       _buildOptionTile(
                         icon: Icons.receipt_long_outlined,
-                        title: 'Mis Facturas',
+                        title: 'Mis facturas',
                         onTap: () {},
                       ),
                     ]),
@@ -153,7 +189,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                   _buildGroupContainer([
                     _buildOptionTile(
                       icon: Icons.person_outline,
-                      title: 'Editar Mi Perfil',
+                      title: 'Mi Perfil',
                       onTap: () {},
                     ),
                     _buildOptionTile(
@@ -163,7 +199,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                     ),
                     _buildOptionTile(
                       icon: Icons.lock_outline,
-                      title: 'Seguridad y Contraseña',
+                      title: 'Seguridad y contraseña',
                       onTap: () {},
                     ),
                   ]),
@@ -204,7 +240,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: const Color.fromARGB(77, 0, 0, 0),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -301,7 +337,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: const Color.fromARGB(62, 0, 0, 0),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

@@ -1,3 +1,5 @@
+import 'package:ferraria/screens/pedidos_vendedor_screen.dart';
+import 'package:ferraria/screens/productos_vendedor_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -79,6 +81,12 @@ class NavBarVendedor extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PedidosVendedorScreen(),
+                ),
+              );
             },
           ),
 
@@ -95,6 +103,12 @@ class NavBarVendedor extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductosVendedorScreen(),
+                ),
+              );
             },
           ),
 
