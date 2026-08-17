@@ -8,38 +8,16 @@ import 'package:ferraria/screens/pedidos_vendedor_screen.dart';
 class DashboardVendedorScreen extends StatelessWidget {
   const DashboardVendedorScreen({super.key});
 
-  // =========================================================
-  // COLORES DE FERRARIA
-  // =========================================================
-
-  static const Color azulClaro = Color(0xFF73C2FB);
-  static const Color azulOscuro = Color(0xFF2971A4);
-
-  static const Color fondo = Color(0xFFF5F8FA);
-  static const Color texto = Color(0xFF1F2937);
-  static const Color textoSecundario = Color(0xFF6B7280);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: fondo,
-
-      // =====================================================
-      // MENÚ LATERAL
-      // =====================================================
-
+      backgroundColor: Colors.white,
       drawer: const NavBarVendedor(),
-
-      // =====================================================
-      // APP BAR
-      // =====================================================
-
       appBar: AppBar(
-        backgroundColor: azulClaro,
+        backgroundColor: Color(0xFF73C2FB),
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
-
         title: Text(
           'Dashboard',
           style: GoogleFonts.nunito(
@@ -55,10 +33,6 @@ class DashboardVendedorScreen extends StatelessWidget {
         ),
       ),
 
-      // =====================================================
-      // BODY
-      // =====================================================
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 22, 20, 35),
 
@@ -66,16 +40,12 @@ class DashboardVendedorScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // =================================================
-            // BIENVENIDA
-            // =================================================
-
             Text(
-              'Bienvenido, vendedor 👋',
+              '¡Bienvenido!',
               style: GoogleFonts.nunito(
                 fontSize: 26,
                 fontWeight: FontWeight.w800,
-                color: texto,
+                color: Color(0xFF1F2937),
               ),
             ),
 
@@ -85,22 +55,19 @@ class DashboardVendedorScreen extends StatelessWidget {
               'Aquí puedes consultar el resumen de tu tienda.',
               style: GoogleFonts.nunito(
                 fontSize: 14,
-                color: textoSecundario,
+                color: Color(0xFF6B7280),
               ),
             ),
 
             const SizedBox(height: 28),
 
-            // =================================================
-            // RESUMEN
-            // =================================================
 
             Text(
               'Resumen de la tienda',
               style: GoogleFonts.nunito(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color: texto,
+                color: Color(0xFF1F2937),
               ),
             ),
 
@@ -138,16 +105,12 @@ class DashboardVendedorScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // =================================================
-            // ACCIONES RÁPIDAS
-            // =================================================
-
             Text(
               'Acciones rápidas',
               style: GoogleFonts.nunito(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color: texto,
+                color: Color(0xFF1F2937),
               ),
             ),
 
@@ -155,11 +118,6 @@ class DashboardVendedorScreen extends StatelessWidget {
 
             Row(
               children: [
-
-                // =============================================
-                // AGREGAR PRODUCTO
-                // =============================================
-
                 Expanded(
                   child: _botonAccion(
                     icono: Icons.add_box_outlined,
@@ -176,10 +134,6 @@ class DashboardVendedorScreen extends StatelessWidget {
                 ),
 
                 const SizedBox(width: 14),
-
-                // =============================================
-                // VER PEDIDOS
-                // =============================================
 
                 Expanded(
                   child: _botonAccion(
@@ -200,16 +154,12 @@ class DashboardVendedorScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // =================================================
-            // ACTIVIDAD RECIENTE
-            // =================================================
-
             Text(
               'Actividad reciente',
               style: GoogleFonts.nunito(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color: texto,
+                color: Color(0xFF1F2937),
               ),
             ),
 
@@ -266,10 +216,6 @@ class DashboardVendedorScreen extends StatelessWidget {
     );
   }
 
-  // =========================================================
-  // TARJETA DE INFORMACIÓN
-  // =========================================================
-
   Widget _crearTarjeta({
     required IconData icono,
     required String titulo,
@@ -286,7 +232,7 @@ class DashboardVendedorScreen extends StatelessWidget {
 
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.045),
+            color: const Color.fromARGB(77, 0, 0, 0),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -306,20 +252,19 @@ class DashboardVendedorScreen extends StatelessWidget {
             height: 56,
 
             decoration: BoxDecoration(
-              color: azulClaro.withOpacity(0.16),
+              color: Color.fromARGB(103, 115, 194, 251),
               borderRadius: BorderRadius.circular(16),
             ),
 
             child: Icon(
               icono,
-              color: azulOscuro,
+              color: Color(0xFF2971A4),
               size: 29,
             ),
           ),
 
           const SizedBox(width: 16),
 
-          // INFORMACIÓN
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -330,7 +275,7 @@ class DashboardVendedorScreen extends StatelessWidget {
                   style: GoogleFonts.nunito(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: textoSecundario,
+                    color: Color(0xFF6B7280),
                   ),
                 ),
 
@@ -341,7 +286,7 @@ class DashboardVendedorScreen extends StatelessWidget {
                   style: GoogleFonts.nunito(
                     fontSize: 23,
                     fontWeight: FontWeight.w800,
-                    color: texto,
+                    color: Color(0xFF1F2937),
                   ),
                 ),
               ],
@@ -357,10 +302,6 @@ class DashboardVendedorScreen extends StatelessWidget {
       ),
     );
   }
-
-  // =========================================================
-  // BOTÓN ACCIÓN RÁPIDA
-  // =========================================================
 
   Widget _botonAccion({
     required IconData icono,
@@ -387,12 +328,12 @@ class DashboardVendedorScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
 
             border: Border.all(
-              color: azulClaro.withOpacity(0.25),
+              color: Color.fromARGB(100, 115, 194, 251),
             ),
 
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: const Color.fromARGB(97, 0, 0, 0),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -407,13 +348,13 @@ class DashboardVendedorScreen extends StatelessWidget {
                 height: 52,
 
                 decoration: BoxDecoration(
-                  color: azulClaro.withOpacity(0.15),
+                  color: Color.fromARGB(100, 115, 194, 251),
                   borderRadius: BorderRadius.circular(15),
                 ),
 
                 child: Icon(
                   icono,
-                  color: azulOscuro,
+                  color:Color(0xFF2971A4),
                   size: 28,
                 ),
               ),
@@ -436,10 +377,6 @@ class DashboardVendedorScreen extends StatelessWidget {
       ),
     );
   }
-
-  // =========================================================
-  // ACTIVIDAD
-  // =========================================================
 
   Widget _crearActividad({
     required IconData icono,
@@ -471,7 +408,7 @@ class DashboardVendedorScreen extends StatelessWidget {
 
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.035),
+                color: const Color.fromARGB(95, 0, 0, 0),
                 blurRadius: 8,
                 offset: const Offset(0, 3),
               ),
@@ -486,13 +423,13 @@ class DashboardVendedorScreen extends StatelessWidget {
                 height: 48,
 
                 decoration: BoxDecoration(
-                  color: azulClaro.withOpacity(0.15),
+                  color: Color.fromARGB(100, 115, 194, 251),
                   borderRadius: BorderRadius.circular(14),
                 ),
 
                 child: Icon(
                   icono,
-                  color: azulOscuro,
+                  color: Color(0xFF2971A4),
                   size: 25,
                 ),
               ),
@@ -512,7 +449,7 @@ class DashboardVendedorScreen extends StatelessWidget {
                       style: GoogleFonts.nunito(
                         fontSize: 15,
                         fontWeight: FontWeight.w800,
-                        color: texto,
+                        color: Color(0xFF1F2937),
                       ),
                     ),
 
@@ -525,7 +462,7 @@ class DashboardVendedorScreen extends StatelessWidget {
 
                       style: GoogleFonts.nunito(
                         fontSize: 13,
-                        color: textoSecundario,
+                        color: Color(0xFF6B7280),
                       ),
                     ),
                   ],

@@ -134,7 +134,7 @@ class DireccionesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color(0xFF73C2FB),
         foregroundColor: Colors.white,
@@ -193,7 +193,7 @@ class DireccionesScreen extends StatelessWidget {
                   side: BorderSide(
                     color: esPredeterminada
                         ? const Color(0xFF73C2FB)
-                        : Colors.transparent,
+                        : Colors.white,
                     width: 2,
                   ),
                 ),
@@ -236,7 +236,7 @@ class DireccionesScreen extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete_outline, color: Colors.red),
+                        icon: const Icon(Icons.delete_outline, color: Color(0xFF2971A4)),
                         onPressed: () => _direccionesRef?.doc(docId).delete(),
                       ),
                     ],

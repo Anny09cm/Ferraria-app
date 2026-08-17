@@ -151,7 +151,6 @@ class PedidosClienteScreen extends StatelessWidget {
             );
           }
 
-          // Ordenar localmente para evitar necesitar índice de Firestore.
           final lista = [...pedidos];
 
           lista.sort((a, b) {
@@ -215,7 +214,7 @@ class _PedidoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: const Color.fromARGB(75, 0, 0, 0),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -231,7 +230,7 @@ class _PedidoCard extends StatelessWidget {
                   width: 45,
                   height: 45,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF73C2FB).withOpacity(0.14),
+                    color: const Color.fromARGB(135, 115, 194, 251),
                     borderRadius: BorderRadius.circular(13),
                   ),
                   child: const Icon(
@@ -268,7 +267,7 @@ class _PedidoCard extends StatelessWidget {
                     vertical: 7,
                   ),
                   decoration: BoxDecoration(
-                    color: colorEstado(estado).withOpacity(0.10),
+                    color: colorEstado(estado),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(

@@ -19,10 +19,8 @@ class PerfilScreen extends StatefulWidget {
 }
 
 class _PerfilScreenState extends State<PerfilScreen> {
-  // Datos del usuario actual de Firebase
   final User? currentUser = FirebaseAuth.instance.currentUser;
 
-  // Variables dinámicas
   String nombreUsuario = 'Cargando...';
   String correoUsuario = '';
   String rolUsuario = 'cliente'; // Por defecto
@@ -206,8 +204,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
                   const SizedBox(height: 20),
 
-  
-
                   _buildSectionTitle('Soporte'),
                   _buildGroupContainer([
                     _buildOptionTile(
@@ -225,7 +221,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                     ),
                   ]),
 
-                  const SizedBox(height: 90), // Espacio extra para que el Navbar no tape las opciones
+                  const SizedBox(height: 90), 
                 ],
               ),
             ),
@@ -248,7 +244,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
       ),
       child: Row(
         children: [
-          // Avatar con foto del perfil de Google o Inicial
           CircleAvatar(
             radius: 32,
             backgroundColor: const Color(0xFF73C2FB),

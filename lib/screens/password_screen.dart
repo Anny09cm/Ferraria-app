@@ -20,7 +20,6 @@ class PasswordScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 50),
 
-           
               Center(
                 child: Image.asset( 
                   'assets/images/logo.png', 

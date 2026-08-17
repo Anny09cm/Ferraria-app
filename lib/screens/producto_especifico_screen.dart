@@ -26,7 +26,6 @@ class ProductoEspecificoScreen extends StatefulWidget {
 
   final List<String>? especificaciones;
 
-  // Callback para regresar al carrito del MainScreen
   final VoidCallback? onIrAlCarrito;
 
   const ProductoEspecificoScreen({
@@ -62,10 +61,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
     _cargarFavorito();
   }
 
-  // =========================================================
-  // CREAR PRODUCTO
-  // =========================================================
-
   Map<String, dynamic> _crearProducto() {
     return {
       'sku': widget.sku?.trim() ?? '',
@@ -82,10 +77,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
       'especificaciones': widget.especificaciones ?? [],
     };
   }
-
-  // =========================================================
-  // CARGAR FAVORITO
-  // =========================================================
 
   Future<void> _cargarFavorito() async {
     final sku = widget.sku?.trim() ?? '';
@@ -105,10 +96,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
     }
   }
 
-  // =========================================================
-  // MENSAJE
-  // =========================================================
-
   void _mostrarMensaje(String mensaje) {
     if (!mounted) return;
 
@@ -127,10 +114,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
       );
   }
 
-  // =========================================================
-  // IR AL CARRITO
-  // =========================================================
-
   void _irAlCarrito() {
     // Si venimos desde MainScreen,
     // usamos el carrito del navbar.
@@ -145,8 +128,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
       return;
     }
 
-    // Si la pantalla se abrió de otra forma,
-    // abrimos el carrito normalmente.
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -154,10 +135,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
       ),
     );
   }
-
-  // =========================================================
-  // FAVORITO
-  // =========================================================
 
   Future<void> _toggleFavorito() async {
     if (_procesandoFavorito) return;
@@ -200,9 +177,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
     }
   }
 
-  // =========================================================
-  // CARRITO
-  // =========================================================
 
   Future<void> _agregarCarrito() async {
     if (_agregandoCarrito) return;
@@ -243,10 +217,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
     }
   }
 
-  // =========================================================
-  // BUILD
-  // =========================================================
-
   @override
   Widget build(BuildContext context) {
     final listaImagenes =
@@ -260,10 +230,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
-
-      // =====================================================
-      // APP BAR
-      // =====================================================
 
       appBar: AppBar(
         backgroundColor: const Color(0xFF73C2FB),
@@ -289,9 +255,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
           ),
         ),
         actions: [
-          // =================================================
-          // CARRITO
-          // =================================================
 
           IconButton(
             onPressed: _irAlCarrito,
@@ -299,10 +262,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
               Icons.shopping_cart_outlined,
             ),
           ),
-
-          // =================================================
-          // FAVORITO
-          // =================================================
 
           IconButton(
             onPressed: _procesandoFavorito ? null : _toggleFavorito,
@@ -327,10 +286,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
           ),
         ),
       ),
-
-      // =====================================================
-      // CONTENIDO
-      // =====================================================
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -362,10 +317,6 @@ class _ProductoEspecificoScreenState extends State<ProductoEspecificoScreen> {
                   ],
             ),
             const SizedBox(height: 24),
-
-            // =================================================
-            // BOTÓN AGREGAR AL CARRITO
-            // =================================================
 
             SizedBox(
               width: double.infinity,

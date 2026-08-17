@@ -56,7 +56,7 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
         SnackBar(
           content: Text(
             agregado
-                ? '${producto["nombre"]} agregado a favoritos ❤️'
+                ? '${producto["nombre"]} agregado a favoritos'
                 : '${producto["nombre"]} eliminado de favoritos',
             style: GoogleFonts.nunito(),
           ),
@@ -259,34 +259,15 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
                     ),
                     itemCount: productosFiltrados.length,
                     itemBuilder: (context, index) {
-                      final producto = productosFiltrados[index].data()
-                          as Map<String, dynamic>;
-
-                      final nombre =
-                          producto['nombre']?.toString() ?? '';
-                      final imagen =
-                          producto['imagen']?.toString() ?? '';
-                      final precio =
-                          producto['precio']?.toString() ?? '';
-                      final marca =
-                          producto['marca']?.toString() ?? 'Genérico';
-                      final sku =
-                          producto['sku']?.toString() ?? '';
-
-                      final disponibles = int.tryParse(
-                            producto['disponibles']?.toString() ?? '0',
-                          ) ??
-                          0;
-
-                      final puntuacion = double.tryParse(
-                            producto['puntuacion']?.toString() ?? '0',
-                          ) ??
-                          0.0;
-
-                      final comentarios = int.tryParse(
-                            producto['comentarios']?.toString() ?? '0',
-                          ) ??
-                          0;
+                      final producto = productosFiltrados[index].data() as Map<String, dynamic>;
+                      final nombre = producto['nombre']?.toString() ?? '';
+                      final imagen = producto['imagen']?.toString() ?? '';
+                      final precio = producto['precio']?.toString() ?? '';
+                      final marca = producto['marca']?.toString() ?? 'Genérico';
+                      final sku = producto['sku']?.toString() ?? '';
+                      final disponibles = int.tryParse(producto['disponibles']?.toString() ?? '0', ) ?? 0;
+                      final puntuacion = double.tryParse(producto['puntuacion']?.toString() ?? '0',) ?? 0.0;
+                      final comentarios = int.tryParse(producto['comentarios']?.toString() ?? '0',) ?? 0;
 
                       return Stack(
                         children: [
@@ -341,8 +322,7 @@ class _ListaProductosScreenState extends State<ListaProductosScreen> {
                                   sku.isNotEmpty ? sku : nombre,
                                 ),
                                 builder: (context, favSnapshot) {
-                                  final esFavorito =
-                                      favSnapshot.data ?? false;
+                                  final esFavorito = favSnapshot.data ?? false;
 
                                   return Container(
                                     decoration: const BoxDecoration(

@@ -4,13 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class CartFavoritesService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
-
   static String? get _uid => _auth.currentUser?.uid;
-
-  // =========================================================
-  // CARRITO
-  // =========================================================
-
   static Stream<QuerySnapshot<Map<String, dynamic>>> obtenerCarritoStream() {
     if (_uid == null) {
       return const Stream.empty();
@@ -121,10 +115,6 @@ class CartFavoritesService {
     await batch.commit();
   }
 
-  // =========================================================
-  // FAVORITOS
-  // =========================================================
-
   static Stream<QuerySnapshot<Map<String, dynamic>>> obtenerFavoritosStream() {
     if (_uid == null) {
       return const Stream.empty();
@@ -231,10 +221,6 @@ class CartFavoritesService {
     return snapshot.exists;
   }
 
-  // =========================================================
-  // PEDIDOS
-  // =========================================================
-
   static Stream<QuerySnapshot<Map<String, dynamic>>> obtenerPedidosStream() {
     if (_uid == null) {
       return const Stream.empty();
@@ -247,10 +233,6 @@ class CartFavoritesService {
         .orderBy('fecha', descending: true)
         .snapshots();
   }
-
-  // =========================================================
-  // CREAR PEDIDO
-  // =========================================================
 
   static Future<String?> crearPedido({
     required List<Map<String, dynamic>> productos,

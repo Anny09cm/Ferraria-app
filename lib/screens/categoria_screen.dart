@@ -9,9 +9,6 @@ class CategoriaScreen extends StatelessWidget {
   final List<Map<String, String>> productos;
 
   final VoidCallback? onIrAlCarrito;
-
-  // true = vendedor
-  // false = cliente
   final bool esVendedor;
 
   const CategoriaScreen({
@@ -95,26 +92,8 @@ class CategoriaScreen extends StatelessWidget {
                 nombre: item["nombre"] ?? '',
                 imagen: item["imagen"] ?? '',
                 precio: item["precio"] ?? '',
-                puntuacion:
-                    double.tryParse(
-                          item["puntuacion"] ??
-                              '0.0',
-                        ) ??
-                        0.0,
-                comentarios:
-                    int.tryParse(
-                          item["comentarios"] ??
-                              '0',
-                        ) ??
-                        0,
-
-                // NO ponemos onAddToCart aquí.
-                //
-                // Esta tarjeta solamente representa
-                // la subcategoría.
-                //
-                // El ProductoCard no mostrará carrito
-                // porque onAddToCart es null.
+                puntuacion: double.tryParse( item["puntuacion"] ?? '0.0',) ?? 0.0,
+                comentarios: int.tryParse( item["comentarios"] ?? '0',) ?? 0,
               ),
             );
           },

@@ -25,9 +25,6 @@ class MetodosPagoScreen extends StatelessWidget {
         .collection('metodos_pago');
   }
 
-  // =========================================================
-  // MENSAJE
-  // =========================================================
 
   void _mostrarMensaje(
     BuildContext context,
@@ -45,7 +42,7 @@ class MetodosPagoScreen extends StatelessWidget {
             ),
           ),
           backgroundColor:
-              error ? Colors.redAccent : azulOscuro,
+              error ? azulOscuro : azulOscuro,
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
           shape: RoundedRectangleBorder(
@@ -54,10 +51,6 @@ class MetodosPagoScreen extends StatelessWidget {
         ),
       );
   }
-
-  // =========================================================
-  // AGREGAR TARJETA
-  // =========================================================
 
   void _mostrarModalAgregarTarjeta(
     BuildContext context,
@@ -96,10 +89,6 @@ class MetodosPagoScreen extends StatelessWidget {
                     crossAxisAlignment:
                         CrossAxisAlignment.start,
                     children: [
-                      // =================================================
-                      // INDICADOR
-                      // =================================================
-
                       Center(
                         child: Container(
                           width: 45,
@@ -113,10 +102,6 @@ class MetodosPagoScreen extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 20),
-
-                      // =================================================
-                      // TITULO
-                      // =================================================
 
                       Row(
                         children: [
@@ -162,10 +147,6 @@ class MetodosPagoScreen extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 22),
-
-                      // =================================================
-                      // VISTA PREVIA
-                      // =================================================
 
                       Container(
                         width: double.infinity,
@@ -242,10 +223,6 @@ class MetodosPagoScreen extends StatelessWidget {
 
                       const SizedBox(height: 22),
 
-                      // =================================================
-                      // TITULAR
-                      // =================================================
-
                       Text(
                         'Nombre del titular',
                         style: GoogleFonts.nunito(
@@ -271,9 +248,6 @@ class MetodosPagoScreen extends StatelessWidget {
 
                       const SizedBox(height: 16),
 
-                      // =================================================
-                      // NUMERO
-                      // =================================================
 
                       Text(
                         'Número de tarjeta',
@@ -311,10 +285,6 @@ class MetodosPagoScreen extends StatelessWidget {
 
                       const SizedBox(height: 16),
 
-                      // =================================================
-                      // EXPIRACION
-                      // =================================================
-
                       Text(
                         'Fecha de vencimiento',
                         style: GoogleFonts.nunito(
@@ -340,14 +310,11 @@ class MetodosPagoScreen extends StatelessWidget {
 
                       const SizedBox(height: 22),
 
-                      // =================================================
-                      // SEGURIDAD
-                      // =================================================
 
                       Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.08),
+                          color: const Color.fromARGB(127, 76, 175, 79),
                           borderRadius:
                               BorderRadius.circular(15),
                         ),
@@ -372,10 +339,6 @@ class MetodosPagoScreen extends StatelessWidget {
                       ),
 
                       const SizedBox(height: 22),
-
-                      // =================================================
-                      // GUARDAR
-                      // =================================================
 
                       SizedBox(
                         width: double.infinity,
@@ -877,9 +840,6 @@ class MetodosPagoScreen extends StatelessWidget {
                 return ListView(
                   padding: const EdgeInsets.all(20),
                   children: [
-                    // =================================================
-                    // ENCABEZADO
-                    // =================================================
 
                     Container(
                       padding:
@@ -1018,9 +978,6 @@ class MetodosPagoScreen extends StatelessWidget {
               },
             ),
 
-      // =========================================================
-      // BOTON AGREGAR
-      // =========================================================
 
       floatingActionButton:
           FloatingActionButton.extended(
@@ -1039,10 +996,7 @@ class MetodosPagoScreen extends StatelessWidget {
           Icons.add_card_rounded,
         ),
         label: Text(
-          'Agregar tarjeta',
-          style: GoogleFonts.nunito(
-            fontWeight: FontWeight.bold,
-          ),
+          ''
         ),
       ),
     );

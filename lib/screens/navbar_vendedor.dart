@@ -16,7 +16,6 @@ class NavBarVendedor extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          // Encabezado del menú
           UserAccountsDrawerHeader(
             accountName: Text(
               'Usuario',
@@ -45,7 +44,6 @@ class NavBarVendedor extends StatelessWidget {
             ),
           ),
 
-          // Dashboard
           ListTile(
             leading: const Icon(Icons.dashboard),
             title: Text(
@@ -197,7 +195,6 @@ class NavBarVendedor extends StatelessWidget {
             },
           ),
 
-          // Cerrar sesión
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text(

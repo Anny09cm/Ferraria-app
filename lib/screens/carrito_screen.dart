@@ -204,7 +204,7 @@ class _CarritoScreenState extends State<CarritoScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
@@ -231,7 +231,6 @@ class _CarritoScreenState extends State<CarritoScreen> {
     );
   }
 
-  // ITEM CON NAVEGACIÓN A DETALLES DEL PRODUCTO
   Widget _buildItemCarrito(String docId, Map<String, dynamic> item) {
     final cantidad = (item['cantidad'] ?? 1) as int;
     final precioNum = _parsePrecio(item['precio']);
@@ -241,10 +240,10 @@ class _CarritoScreenState extends State<CarritoScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // NAVEGACIÓN A ESPECIFICACIONES AL TOCAR LA IMAGEN O EL TEXTO
+
           GestureDetector(
             onTap: () async {
-              // Buscar información detallada del producto en Firestore
+  
               final docQuery = await FirebaseFirestore.instance
                   .collection('productos')
                   .where('nombre', isEqualTo: item['nombre'])
@@ -285,9 +284,9 @@ class _CarritoScreenState extends State<CarritoScreen> {
               borderRadius: BorderRadius.circular(10),
               child: Image.asset(
                 item['imagen'] ?? '',
-                width: 65,
-                height: 65,
-                fit: BoxFit.cover,
+                width: 70,
+                height: 70,
+                fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) => const Icon(
                   Icons.image_not_supported_outlined,
                   color: Colors.grey,

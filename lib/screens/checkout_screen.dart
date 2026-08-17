@@ -28,26 +28,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   bool _cargando = false;
 
-  static String? get _uid =>
-      FirebaseAuth.instance.currentUser?.uid;
-
-  // =========================================================
-  // CONFIRMAR PEDIDO
-  // =========================================================
-
+  static String? get _uid => FirebaseAuth.instance.currentUser?.uid;
   Future<void> _confirmarPedido() async {
     if (_direccionSeleccionadaId == null) {
       _mostrarMensaje(
         'Por favor selecciona una dirección de envío',
-        Colors.redAccent,
+        Color(0xFF2971A4), 
       );
-      return;
+    return;
     }
 
     if (_metodoPagoSeleccionadoId == null) {
       _mostrarMensaje(
         'Por favor selecciona un método de pago',
-        Colors.redAccent,
+        Color(0xFF2971A4),
       );
       return;
     }
@@ -58,17 +52,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     try {
       if (_uid != null) {
-        // Obtener productos del carrito
         final carritoSnapshot = await FirebaseFirestore.instance
             .collection('usuarios')
             .doc(_uid)
             .collection('carrito')
             .get();
 
-        final productos =
-            carritoSnapshot.docs.map((doc) => doc.data()).toList();
+        final productos = carritoSnapshot.docs.map((doc) => doc.data()).toList();
 
-        // Crear pedido
         await FirebaseFirestore.instance.collection('pedidos').add({
           'usuarioId': _uid,
           'total': widget.totalPagar,
@@ -80,7 +71,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         });
       }
 
-      // Vaciar carrito
       await CartFavoritesService.vaciarCarrito();
 
       if (!mounted) return;
@@ -89,7 +79,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         _cargando = false;
       });
 
-      // Mostrar confirmación
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -99,12 +88,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25),
             ),
-            contentPadding: const EdgeInsets.fromLTRB(
-              25,
-              30,
-              25,
-              20,
-            ),
+            contentPadding: const EdgeInsets.fromLTRB(25, 30, 25, 20),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -112,7 +96,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   width: 80,
                   height: 80,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF73C2FB).withOpacity(0.15),
+                    color: const Color.fromARGB(109, 115, 194, 251),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -187,14 +171,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
       _mostrarMensaje(
         'Error al procesar pedido',
-        Colors.redAccent,
+        Color(0xFF2971A4),
       );
     }
   }
-
-  // =========================================================
-  // MENSAJE
-  // =========================================================
 
   void _mostrarMensaje(
     String mensaje,
@@ -218,18 +198,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       );
   }
 
-  // =========================================================
-  // BUILD
-  // =========================================================
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8FA),
-
-      // -------------------------------------------------------
-      // APP BAR
-      // -------------------------------------------------------
 
       appBar: AppBar(
         backgroundColor: const Color(0xFF73C2FB),
@@ -252,10 +224,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ),
       ),
 
-      // -------------------------------------------------------
-      // BODY
-      // -------------------------------------------------------
-
       body: _cargando
           ? const Center(
               child: CircularProgressIndicator(
@@ -263,23 +231,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             )
           : SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(
-                20,
-                20,
-                20,
-                35,
-              ),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 35),
 
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-                  // =================================================
-                  // DIRECCIÓN
-                  // =================================================
-
                   _buildTituloSeccion(
                     icon: Icons.location_on_outlined,
                     titulo: 'Dirección de envío',
@@ -316,8 +272,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         );
                       }
 
-                      final docs =
-                          snapshot.data?.docs ?? [];
+                      final docs = snapshot.data?.docs ?? [];
 
                       if (docs.isEmpty) {
                         return _buildEmptySelector(
@@ -336,26 +291,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                       return Column(
                         children: docs.map((doc) {
-                          final data =
-                              doc.data()
-                                  as Map<String, dynamic>;
+                          final data = doc.data() as Map<String, dynamic>;
 
-                          final seleccionado =
-                              _direccionSeleccionadaId ==
-                                  doc.id;
+                          final seleccionado = _direccionSeleccionadaId == doc.id;
 
                           return _buildSelectorCard(
                             seleccionado: seleccionado,
                             icon: Icons.location_on_outlined,
-                            titulo:
-                                data['alias'] ??
-                                    'Dirección',
+                            titulo: data['alias'] ?? 'Dirección',
                             subtitulo:
-                                '${data['calle']}, CP ${data['cp']}',
+                            '${data['calle']}, CP ${data['cp']}',
                             onTap: () {
                               setState(() {
-                                _direccionSeleccionadaId =
-                                    doc.id;
+                                _direccionSeleccionadaId = doc.id;
                                 _direccionData = data;
                               });
                             },
@@ -367,10 +315,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                   const SizedBox(height: 30),
 
-                  // =================================================
-                  // MÉTODO DE PAGO
-                  // =================================================
-
                   _buildTituloSeccion(
                     icon: Icons.credit_card_outlined,
                     titulo: 'Método de pago',
@@ -378,8 +322,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              const MetodosPagoScreen(),
+                          builder: (context) => const MetodosPagoScreen(),
                         ),
                       );
                     },
@@ -407,8 +350,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         );
                       }
 
-                      final docs =
-                          snapshot.data?.docs ?? [];
+                      final docs = snapshot.data?.docs ?? [];
 
                       if (docs.isEmpty) {
                         return _buildEmptySelector(
@@ -417,8 +359,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const MetodosPagoScreen(),
+                                builder: (context) => const MetodosPagoScreen(),
                               ),
                             );
                           },
@@ -427,13 +368,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                       return Column(
                         children: docs.map((doc) {
-                          final data =
-                              doc.data()
-                                  as Map<String, dynamic>;
-
-                          final seleccionado =
-                              _metodoPagoSeleccionadoId ==
-                                  doc.id;
+                          final data = doc.data() as Map<String, dynamic>;
+                          final seleccionado = _metodoPagoSeleccionadoId == doc.id;
 
                           return _buildSelectorCard(
                             seleccionado: seleccionado,
@@ -444,8 +380,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 '${data['tipo']} - ${data['titular']}',
                             onTap: () {
                               setState(() {
-                                _metodoPagoSeleccionadoId =
-                                    doc.id;
+                                _metodoPagoSeleccionadoId = doc.id;
                                 _metodoPagoData = data;
                               });
                             },
@@ -456,10 +391,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ),
 
                   const SizedBox(height: 30),
-
-                  // =================================================
-                  // RESUMEN
-                  // =================================================
 
                   Container(
                     width: double.infinity,
@@ -518,8 +449,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         const SizedBox(height: 12),
 
                         Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
                               'Total a pagar',
@@ -546,10 +476,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                   const SizedBox(height: 25),
 
-                  // =================================================
-                  // BOTÓN PAGAR
-                  // =================================================
-
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
@@ -561,28 +487,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color(0xFF2971A4),
-
+                          backgroundColor: const Color(0xFF2971A4),
                           foregroundColor: Colors.white,
-
                           elevation: 3,
-
-                          shadowColor:
-                              const Color(0xFF2971A4),
-
+                          shadowColor:const Color(0xFF2971A4),
                           shape:
                               RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.circular(18),
+                              BorderRadius.circular(18),
                           ),
                         ),
 
                         onPressed: _confirmarPedido,
 
                         child: Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
 
                           children: [
                             const Icon(
@@ -621,10 +540,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ),
     );
   }
-
-  // =========================================================
-  // TÍTULO DE SECCIÓN
-  // =========================================================
 
   Widget _buildTituloSeccion({
     required IconData icon,
@@ -665,10 +580,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // =========================================================
-  // TARJETA DE SELECCIÓN
-  // =========================================================
-
   Widget _buildSelectorCard({
     required bool seleccionado,
     required IconData icon,
@@ -690,20 +601,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
         decoration: BoxDecoration(
           color: Colors.white,
-
           borderRadius: BorderRadius.circular(17),
-
           border: Border.all(
             color: seleccionado
                 ? const Color(0xFF73C2FB)
                 : Colors.transparent,
-
             width: 2,
           ),
 
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: const Color.fromARGB(106, 0, 0, 0),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -718,8 +626,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               decoration: BoxDecoration(
                 color: seleccionado
-                    ? const Color(0xFF73C2FB)
-                        .withOpacity(0.15)
+                    ? const Color.fromARGB(84, 115, 194, 251)
                     : Colors.grey[100],
 
                 borderRadius:
@@ -794,10 +701,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
     );
   }
-
-  // =========================================================
-  // SELECTOR VACÍO
-  // =========================================================
 
   Widget _buildEmptySelector(
     String texto,

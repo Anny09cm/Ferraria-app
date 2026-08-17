@@ -15,21 +15,14 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-
-
   final _nombreController = TextEditingController();
   final _telefonoController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-
-
   String _rolSeleccionado = 'cliente';
-
   bool _isLoading = false;
-
-
 
   @override
   void dispose() {
@@ -42,8 +35,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-
-
   Future<void> _registrarConEmail() async {
     final nombre = _nombreController.text.trim();
     final telefono = _telefonoController.text.trim();
@@ -51,8 +42,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final password = _passwordController.text.trim();
     final confirmPassword =
         _confirmPasswordController.text.trim();
-
-
 
     if (nombre.isEmpty ||
         email.isEmpty ||
@@ -83,7 +72,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      // Crear usuario en Firebase Authentication
       final UserCredential userCredential =
           await FirebaseAuth.instance
               .createUserWithEmailAndPassword(
@@ -142,53 +130,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
-
-
   Future<void> _registrarConGoogle() async {
   setState(() {
     _isLoading = true;
   });
 
   try {
-    // Google Sign-In 7.x utiliza una instancia única
     final GoogleSignIn googleSignIn = GoogleSignIn.instance;
-
-    // Inicializar Google Sign-In
     await googleSignIn.initialize();
 
-    // Abrir selección de cuenta de Google
-    final GoogleSignInAccount googleUser =
-        await googleSignIn.authenticate();
-
-    // Obtener autenticación
-    final GoogleSignInAuthentication googleAuth =
-        googleUser.authentication;
-
-    // En google_sign_in 7.x se utiliza el ID Token.
-    // accessToken ya no forma parte de GoogleSignInAuthentication.
-    final AuthCredential credential =
-        GoogleAuthProvider.credential(
-      idToken: googleAuth.idToken,
-    );
-
-    // Iniciar sesión en Firebase
-    final UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithCredential(
-      credential,
-    );
-
+    final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
+    final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential( idToken: googleAuth.idToken,);
+    final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential( credential,);
     final User? user = userCredential.user;
 
     if (user != null) {
-      final DocumentReference userDoc =
-          FirebaseFirestore.instance
-              .collection('usuarios')
-              .doc(user.uid);
+      final DocumentReference userDoc = FirebaseFirestore.instance.collection('usuarios').doc(user.uid);
 
-      final DocumentSnapshot snapshot =
-          await userDoc.get();
-
-      // Si es un usuario nuevo, guardar sus datos
+      final DocumentSnapshot snapshot = await userDoc.get();
       if (!snapshot.exists) {
         await userDoc.set({
           'uid': user.uid,
@@ -229,7 +189,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 }
 
-
   void _navegarAMainScreen() {
     Navigator.pushAndRemoveUntil(
       context,
@@ -240,8 +199,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-
-
   void _mostrarSnackBar(String texto) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -249,7 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           texto,
           style: GoogleFonts.nunito(),
         ),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Color(0xFF2971A4),
       ),
     );
   }
@@ -320,10 +277,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
 
                       const SizedBox(height: 20),
-
-                      // =====================================
-                      // SELECTOR DE ROL
-                      // =====================================
 
                       Text(
                         '¿Cómo deseas usar la app?',
@@ -693,20 +646,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  // =========================================================
-  // ESTILO DE TEXTOS
-  // =========================================================
-
   TextStyle _estiloTextoBlanco() {
     return GoogleFonts.nunito(
       color: Colors.white,
       fontSize: 16,
     );
   }
-
-  // =========================================================
-  // DECORACIÓN DE INPUTS
-  // =========================================================
 
   InputDecoration _buildInputDecoration(
     String hint,
@@ -775,8 +720,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: Colors.black
-                        .withOpacity(0.15),
+                    color: const Color.fromARGB(63, 0, 0, 0),
                     blurRadius: 6,
                     offset:
                         const Offset(0, 3),

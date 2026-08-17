@@ -39,9 +39,6 @@ class ProductoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // =================================================
-            // IMAGEN
-            // =================================================
             SizedBox(
               height: 85,
               width: double.infinity,
@@ -61,9 +58,6 @@ class ProductoCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            // =================================================
-            // NOMBRE
-            // =================================================
             Center(
               child: Text(
                 nombre,
@@ -78,9 +72,6 @@ class ProductoCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            // =================================================
-            // PRECIO
-            // =================================================
             if (precio != null && precio!.isNotEmpty)
               Text(
                 precio!,
@@ -91,9 +82,6 @@ class ProductoCard extends StatelessWidget {
                 ),
               ),
             const Spacer(),
-            // =================================================
-            // PARTE INFERIOR
-            // =================================================
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -131,12 +119,6 @@ class ProductoCard extends StatelessWidget {
                   )
                 else
                   const Spacer(),
-                // =================================================
-                // CARRITO
-                // =================================================
-                // Solo aparece si onAddToCart existe.
-                // En vendedor será null.
-                // =================================================
                 if (onAddToCart != null || agregando)
                   Material(
                     color: Colors.transparent,

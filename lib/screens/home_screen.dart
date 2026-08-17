@@ -20,10 +20,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ============================================================
-    // MARCAS POPULARES
-    // ============================================================
-
     final List<Map<String, String>> marcas = [
       {
         'nombre': 'Truper',
@@ -49,17 +45,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-
-      // ==========================================================
-      // DRAWER
-      // ==========================================================
-
       drawer: const NavBarCliente(),
-
-      // ==========================================================
-      // APP BAR
-      // ==========================================================
-
       appBar: AppBar(
         backgroundColor: const Color(0xFF73C2FB),
         foregroundColor: Colors.white,
@@ -71,35 +57,24 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
 
-      // ==========================================================
-      // BODY
-      // ==========================================================
-
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 5),
 
-            // ======================================================
-            // OFERTAS DEL DÍA
-            // ======================================================
+            SizedBox(height: 5),
 
             Text(
-              '¡Ofertas del día!',
+              '   ¡Ofertas del día!',
               style: GoogleFonts.nunito(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
 
-            const SizedBox(height: 15),
-
-            // ======================================================
-            // CARRUSEL DE OFERTAS
-            // ======================================================
-
+            const SizedBox(height: 10),
+            
             CarouselSlider(
               items: [
                 _crearOferta(
@@ -124,47 +99,35 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
               options: CarouselOptions(
-                height: 200,
+                height: 160,
                 autoPlay: true,
                 autoPlayInterval: const Duration(seconds: 3),
                 enlargeCenterPage: true,
-                viewportFraction: 0.85,
+                viewportFraction: 0.90,
                 enableInfiniteScroll: true,
               ),
             ),
 
-            const SizedBox(height: 30),
-
-            // ======================================================
-            // VOLVER A COMPRAR
-            // ======================================================
+            const SizedBox(height: 10),
 
             Text(
-              'Volver a comprar',
+              '   Volver a comprar',
               style: GoogleFonts.nunito(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
 
-            const SizedBox(height: 15),
-
-            // ======================================================
-            // PRODUCTOS DESDE FIRESTORE
-            // ======================================================
+            const SizedBox(height: 10),
 
             SizedBox(
-              height: 220,
+              height: 230,
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('productos')
                     .limit(6)
                     .snapshots(),
                 builder: (context, snapshot) {
-                  // ------------------------------------------------
-                  // CARGANDO
-                  // ------------------------------------------------
-
                   if (snapshot.connectionState ==
                       ConnectionState.waiting) {
                     return const Center(
@@ -174,24 +137,16 @@ class HomeScreen extends StatelessWidget {
                     );
                   }
 
-                  // ------------------------------------------------
-                  // ERROR
-                  // ------------------------------------------------
-
                   if (snapshot.hasError) {
                     return Center(
                       child: Text(
                         'Error al cargar productos',
                         style: GoogleFonts.nunito(
-                          color: Colors.red,
+                          color: Color(0xFF2971A4),
                         ),
                       ),
                     );
                   }
-
-                  // ------------------------------------------------
-                  // DOCUMENTOS
-                  // ------------------------------------------------
 
                   final docs = snapshot.data?.docs ?? [];
 
@@ -206,70 +161,33 @@ class HomeScreen extends StatelessWidget {
                     );
                   }
 
-                  // ------------------------------------------------
-                  // LISTA HORIZONTAL
-                  // ------------------------------------------------
-
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     physics: const BouncingScrollPhysics(),
                     itemCount: docs.length,
                     itemBuilder: (context, index) {
-                      final prod =
-                          docs[index].data() as Map<String, dynamic>;
-
-                      final nombre =
-                          prod["nombre"]?.toString() ?? '';
-
-                      final precio =
-                          prod["precio"]?.toString() ?? '';
-
-                      final marca =
-                          prod["marca"]?.toString() ?? 'Generico';
-
-                      final imagen =
-                          prod["imagen"]?.toString() ?? '';
-
-                      final puntuacion =
-                          double.tryParse(
-                                prod["puntuacion"]?.toString() ??
-                                    '0.0',
-                              ) ??
-                              0.0;
-
-                      final comentarios =
-                          int.tryParse(
-                                prod["comentarios"]?.toString() ??
-                                    '0',
-                              ) ??
-                              0;
-
-                      final imagenes =
-                          (prod["imagenes"] as List<dynamic>?)
-                              ?.cast<String>();
-
-                      final especificaciones =
-                          (prod["especificaciones"]
-                              as List<dynamic>?)
-                              ?.cast<String>();
+                      final prod = docs[index].data() as Map<String, dynamic>;
+                      final nombre = prod["nombre"]?.toString() ?? '';
+                      final precio = prod["precio"]?.toString() ?? '';
+                      final marca = prod["marca"]?.toString() ?? 'Generico';
+                      final imagen = prod["imagen"]?.toString() ?? '';
+                      final puntuacion = double.tryParse( prod["puntuacion"]?.toString() ?? '0.0',) ?? 0.0;
+                      final comentarios = int.tryParse( prod["comentarios"]?.toString() ?? '0', ) ?? 0;
+                      final imagenes = (prod["imagenes"] as List<dynamic>?) ?.cast<String>();
+                      final especificaciones = (prod["especificaciones"] as List<dynamic>?) ?.cast<String>();
 
                       return Padding(
                         padding: const EdgeInsets.only(
-                          right: 15,
+                          right: 5,
                         ),
                         child: SizedBox(
                           width: 160,
                           child: GestureDetector(
-                            // ==================================================
-                            // ABRIR PRODUCTO
-                            // ==================================================
-
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      ProductoEspecificoScreen(
+                                  builder: (context) => ProductoEspecificoScreen(
                                     nombre: nombre,
                                     precio: precio,
                                     marca: marca,
@@ -289,10 +207,6 @@ class HomeScreen extends StatelessWidget {
                               );
                             },
 
-                            // ==================================================
-                            // PRODUCT CARD
-                            // ==================================================
-
                             child: ProductoCard(
                               imagen: imagen,
                               nombre: nombre,
@@ -300,15 +214,6 @@ class HomeScreen extends StatelessWidget {
                               marca: prod['marca']?.toString(),
                               puntuacion: puntuacion,
                               comentarios: comentarios,
-
-                              // ================================================
-                              // AGREGAR AL CARRITO
-                              // ================================================
-                              //
-                              // HomeScreen es para CLIENTES.
-                              // Por eso el botón del carrito sí aparece.
-                              //
-                              // ================================================
 
                               onAddToCart: () async {
                                 try {
@@ -326,7 +231,7 @@ class HomeScreen extends StatelessWidget {
                                       .showSnackBar(
                                     SnackBar(
                                       content: Text(
-                                        '$nombre agregado al carrito 🛒',
+                                        'Agregado al carrito ',
                                         style:
                                             GoogleFonts.nunito(),
                                       ),
@@ -359,7 +264,7 @@ class HomeScreen extends StatelessWidget {
                                           const Duration(seconds: 2),
                                       behavior:
                                           SnackBarBehavior.floating,
-                                      backgroundColor: Colors.red,
+                                      backgroundColor: Color(0xFF2971A4),
                                     ),
                                   );
                                 }
@@ -374,25 +279,17 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 25),
-
-            // ======================================================
-            // MARCAS POPULARES
-            // ======================================================
+            const SizedBox(height: 15),
 
             Text(
-              'Marcas populares',
+              '   Marcas populares',
               style: GoogleFonts.nunito(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
 
-            const SizedBox(height: 15),
-
-            // ======================================================
-            // LISTA DE MARCAS
-            // ======================================================
+            const SizedBox(height: 5),
 
             SizedBox(
               height: 100,
@@ -423,24 +320,15 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
             ),
-
-            // ======================================================
-            // ESPACIO FINAL
-            // ======================================================
-
             SizedBox(
               height:
-                  MediaQuery.of(context).padding.bottom + 30,
+                  MediaQuery.of(context).padding.bottom + 20,
             ),
           ],
         ),
       ),
     );
   }
-
-  // ============================================================
-  // WIDGET OFERTA
-  // ============================================================
 
   Widget _crearOferta({
     required String imagen,
@@ -462,10 +350,6 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // ========================================================
-          // IMAGEN
-          // ========================================================
-
           Expanded(
             child: ClipRRect(
               borderRadius: const BorderRadius.horizontal(
@@ -479,21 +363,15 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
-          // ========================================================
-          // INFORMACIÓN
-          // ========================================================
-
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment:
                     MainAxisAlignment.center,
                 crossAxisAlignment:
                     CrossAxisAlignment.start,
                 children: [
-                  // OFERTA
-
                   Text(
                     'OFERTA',
                     style: GoogleFonts.nunito(
@@ -504,8 +382,6 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 8),
-
-                  // NOMBRE
 
                   Text(
                     nombre,
@@ -518,8 +394,6 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 8),
-
-                  // PRECIO
 
                   Text(
                     precio,

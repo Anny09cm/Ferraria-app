@@ -16,9 +16,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // =========================================================
-  // CONTROLADORES Y VARIABLES
-  // =========================================================
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -31,9 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // =========================================================
-  // INICIAR SESIÓN CON CORREO Y CONTRASEÑA
-  // =========================================================
   Future<void> _iniciarSesionEmail() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -43,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
+    setState(() => _isLoading = true);  
 
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -72,9 +66,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // =========================================================
-  // INICIAR SESIÓN CON GOOGLE (Versión 7.x)
-  // =========================================================
   Future<void> _iniciarSesionGoogle() async {
     setState(() => _isLoading = true);
 
@@ -109,9 +100,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // =========================================================
-  // NAVEGACIÓN Y SNACKBAR
-  // =========================================================
   void _navegarAMainScreen() {
     Navigator.pushAndRemoveUntil(
       context,
@@ -124,14 +112,11 @@ class _LoginScreenState extends State<LoginScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(texto, style: GoogleFonts.nunito()),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Color(0xFF2971A4),
       ),
     );
   }
 
-  // =========================================================
-  // VISTA PRINCIPAL
-  // =========================================================
   @override 
   Widget build(BuildContext context) { 
     return Scaffold( 

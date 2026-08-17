@@ -15,10 +15,6 @@ class FavoritosScreen extends StatefulWidget {
 class _FavoritosScreenState extends State<FavoritosScreen> {
   final Set<String> _procesando = {};
 
-  // =========================================================
-  // MENSAJE
-  // =========================================================
-
   void _mostrarMensaje(String mensaje) {
     if (!mounted) return;
 
@@ -36,10 +32,6 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
         ),
       );
   }
-
-  // =========================================================
-  // BUILD
-  // =========================================================
 
   @override
   Widget build(BuildContext context) {
@@ -130,9 +122,6 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
 
                 return Stack(
                   children: [
-                    // =========================================
-                    // CARD
-                    // =========================================
                     ProductoCard(
                       imagen: producto['imagen']?.toString() ?? '',
                       nombre: nombre,
@@ -164,14 +153,11 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
                       },
                     ),
 
-                    // =========================================
-                    // CORAZÓN FAVORITO
-                    // =========================================
                     Positioned(
                       top: 5,
                       right: 5,
                       child: GestureDetector(
-                        onTap: () {}, // ESTA LÍNEA ES LA MAGIA QUE ABSORBE EL TOQUE
+                        onTap: () {}, 
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(

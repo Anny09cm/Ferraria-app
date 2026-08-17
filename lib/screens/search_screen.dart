@@ -26,10 +26,6 @@ class _SearchScreenState extends State<SearchScreen> {
     super.dispose();
   }
 
-  // =========================================================
-  // MENSAJE
-  // =========================================================
-
   void _mostrarMensaje(String mensaje) {
     if (!mounted) return;
 
@@ -48,9 +44,6 @@ class _SearchScreenState extends State<SearchScreen> {
       );
   }
 
-  // =========================================================
-  // CREAR PRODUCTO COMPLETO
-  // =========================================================
 
   Map<String, dynamic> _crearProducto(Map<String, dynamic> producto) {
     return {
@@ -68,10 +61,6 @@ class _SearchScreenState extends State<SearchScreen> {
       'especificaciones': (producto['especificaciones'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
     };
   }
-
-  // =========================================================
-  // AGREGAR AL CARRITO
-  // =========================================================
 
   Future<void> _agregarAlCarrito(Map<String, dynamic> producto, String idProducto) async {
     if (_agregando.contains(idProducto)) return;
@@ -102,10 +91,6 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
-  // =========================================================
-  // ABRIR PRODUCTO
-  // =========================================================
-
   void _abrirProducto(Map<String, dynamic> producto) {
     final productoCompleto = _crearProducto(producto);
     final sku = productoCompleto['sku'].toString().trim();
@@ -131,10 +116,6 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  // =========================================================
-  // BUILD
-  // =========================================================
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,10 +126,6 @@ class _SearchScreenState extends State<SearchScreen> {
           child: Column(
             children: [
               const SizedBox(height: 15),
-
-              // =================================================
-              // BUSCADOR
-              // =================================================
               Row(
                 children: [
                   Expanded(
@@ -169,9 +146,6 @@ class _SearchScreenState extends State<SearchScreen> {
 
               const SizedBox(height: 20),
 
-              // =================================================
-              // PRODUCTOS
-              // =================================================
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance.collection('productos').snapshots(),
@@ -189,19 +163,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Text(
                           'Error al consultar productos',
                           style: GoogleFonts.nunito(
-                            color: Colors.red,
+                            color: Color(0xFF2971A4),
                           ),
                         ),
                       );
                     }
 
                     final docs = snapshot.data?.docs ?? [];
-
-                    // =================================================
-                    // FILTRAR
-                    // =================================================
                     final consulta = _filtroTexto.toLowerCase().trim();
-
                     final resultados = docs.where((doc) {
                       final producto = doc.data() as Map<String, dynamic>;
                       final nombre = producto['nombre']?.toString().toLowerCase() ?? '';
@@ -225,15 +194,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       );
                     }
 
-                    // =================================================
-                    // GRID
-                    // =================================================
                     return GridView.builder(
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 15,
                         mainAxisSpacing: 15,
-                        mainAxisExtent: 220,
+                        mainAxisExtent: 230,
                       ),
                       itemCount: resultados.length,
                       itemBuilder: (context, index) {

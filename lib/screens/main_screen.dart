@@ -76,7 +76,6 @@ class _MainScreenState extends State<MainScreen> {
     }
 
     final bool esVendedor = _rol == 'vendedor';
-
     final List<Widget> screens = esVendedor
         ? [
             const DashboardVendedorScreen(),
